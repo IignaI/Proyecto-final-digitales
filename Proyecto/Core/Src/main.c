@@ -18,6 +18,14 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "luces.h"
+#include "teclado.h"
+#include "adicionales.h"
+#include "buzzer.h"
+#include "logica.h"
+#include "cpu.h"
+
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
