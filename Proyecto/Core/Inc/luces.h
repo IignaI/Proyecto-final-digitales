@@ -7,7 +7,7 @@
 
 #ifndef INC_LUCES_H_
 #define INC_LUCES_H_
-void tablero(void);
+void tablero(TIM_HandleTypeDef timer);
 
 
 #endif /* INC_LUCES_H_ */

@@ -29,25 +29,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  0000400c  2**0
                   CONTENTS, READONLY
- 13 .debug_info   000081e5  00000000  00000000  0000403c  2**0
+ 13 .debug_info   000081fa  00000000  00000000  0000403c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 000014a6  00000000  00000000  0000c221  2**0
+ 14 .debug_abbrev 000014c0  00000000  00000000  0000c236  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00000960  00000000  00000000  0000d6c8  2**3
+ 15 .debug_aranges 00000960  00000000  00000000  0000d6f8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 0000073b  00000000  00000000  0000e028  2**0
+ 16 .debug_rnglists 0000073b  00000000  00000000  0000e058  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  00001291  00000000  00000000  0000e763  2**0
+ 17 .debug_macro  00001291  00000000  00000000  0000e793  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0000a1e9  00000000  00000000  0000f9f4  2**0
+ 18 .debug_line   0000a1e7  00000000  00000000  0000fa24  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000c4e8b  00000000  00000000  00019bdd  2**0
+ 19 .debug_str    000c4e93  00000000  00000000  00019c0b  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  000dea68  2**0
+ 20 .comment      00000043  00000000  00000000  000dea9e  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00002718  00000000  00000000  000deaac  2**2
+ 21 .debug_frame  00002718  00000000  00000000  000deae4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 00000070  00000000  00000000  000e11c4  2**0
+ 22 .debug_line_str 00000070  00000000  00000000  000e11fc  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -403,12 +403,12 @@ int main(void)
  8000500:	f000 f8e4 	bl	80006cc <MX_GPIO_Init>
   MX_TIM4_Init();
  8000504:	f000 f86c 	bl	80005e0 <MX_TIM4_Init>
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
+  {
  8000508:	bf00      	nop
  800050a:	e7fd      	b.n	8000508 <main+0x14>
 

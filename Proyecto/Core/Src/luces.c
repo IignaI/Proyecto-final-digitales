@@ -6,8 +6,6 @@
  */
 #include "stm32f4xx_hal.h"
 
-
-
 void tablero(TIM_HandleTypeDef timer){
 // Obtenemos el valor máximo de ciclo de trabajo de la configuración del hgardware
 uint16_t ciclomaximo = TIM4->ARR; // Valor máximo de ciclo de trabajo

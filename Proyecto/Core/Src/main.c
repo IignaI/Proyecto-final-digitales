@@ -18,18 +18,18 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+
+
+
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 #include "luces.h"
 #include "teclado.h"
 #include "adicionales.h"
 #include "buzzer.h"
 #include "logica.h"
 #include "cpu.h"
-
-
-
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -104,6 +104,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  void tablero(htim4);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
