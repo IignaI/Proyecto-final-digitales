@@ -7,7 +7,7 @@
 
 #ifndef INC_LUCES_H_
 #define INC_LUCES_H_
-
+void tablero(void);
 
 
 #endif /* INC_LUCES_H_ */
