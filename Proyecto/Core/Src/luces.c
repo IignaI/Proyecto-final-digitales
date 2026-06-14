@@ -6,27 +6,23 @@
  */
 #include "stm32f4xx_hal.h"
 #include "luces.h"
-// Agregamos un colchón de 50 bits de silencio al principio para absorber glitches de arranque
-#define START_BITS 50
-#define RESET_BITS 800
 
-// El tamaño total del buffer ahora incluye el inicio, los datos y el final
-uint32_t pwm_buffer[START_BITS + TOTAL_BITS + RESET_BITS];
+uint32_t pwm_buffer[START_BITS + TOTAL_BITS + RESET_BITS]; //tamaño de mi buffer de datos que depende del tamaño del tablero
 
 #define PWM_BIT_0  5   // 400ns
 #define PWM_BIT_1  10  // 800ns
 
-void enviar_numero_binario(TIM_HandleTypeDef *htim, uint16_t *lista_colores) {
-    // 1. Limpieza absoluta de todo el array (Todo arranca en cero estricto)
-    for (int i = 0; i < (START_BITS + TOTAL_BITS + RESET_BITS); i++) {
+void actualizar_matriz(TIM_HandleTypeDef *htim, uint16_t *lista_colores) {
+
+    for (int i = 0; i < (START_BITS + TOTAL_BITS + RESET_BITS); i++) { //limpio la matriz entera
         pwm_buffer[i] = 0;
     }
 
-    // El índice de datos reales ya no arranca en 0, arranca DESPUÉS del colchón de inicio
-    int index = START_BITS;
 
-    // 2. Procesamiento de los 16 LEDs con su conversión
-    for (int led = 0; led < NUM_LEDS; led++) {
+    int index = START_BITS;  // establezco a partir de quepunto delbufferse mandan los datos (inicia en0 para evitar errores por ruidos)
+
+
+    for (int led = 0; led < NUM_LEDS; led++) {  // convierto los valores del vector de entrada en un numero binario que representa los colores
 
         uint16_t color_rgb565 = lista_colores[led];
 
@@ -36,7 +32,7 @@ void enviar_numero_binario(TIM_HandleTypeDef *htim, uint16_t *lista_colores) {
 
         uint32_t color_nativo_24bits = (g << 16) | (r << 8) | b;
 
-        for (int bit = 23; bit >= 0; bit--) {
+        for (int bit = 23; bit >= 0; bit--) { // le asigno al buffer los ciclos de trabajo de cada bit del numero generado
             if ((color_nativo_24bits >> bit) & 1) {
                 pwm_buffer[index] = PWM_BIT_1;
             } else {
@@ -46,10 +42,11 @@ void enviar_numero_binario(TIM_HandleTypeDef *htim, uint16_t *lista_colores) {
         }
     }
 
-    // 3. Disparo seguro de hardware
-    HAL_TIM_PWM_Stop_DMA(htim, TIM_CHANNEL_2);
+    HAL_TIM_PWM_Stop_DMA(htim, TIM_CHANNEL_2);    // presetea el dma frenando cualquier transmicion o cosa anterior y poniendolo en 0
     __HAL_TIM_SET_COMPARE(htim, TIM_CHANNEL_2, 0);
 
-    // Enviamos el buffer completo (los 50 ceros iniciales limpian el canal)
-    HAL_TIM_PWM_Start_DMA(htim, TIM_CHANNEL_2, (uint32_t*)pwm_buffer, START_BITS + TOTAL_BITS + RESET_BITS);
+
+
+    HAL_TIM_PWM_Start_DMA(htim, TIM_CHANNEL_2, (uint32_t*)pwm_buffer, START_BITS + TOTAL_BITS + RESET_BITS); // mando el buffer que arme con todos los ciclos de trabajo de los leds
+
 }
