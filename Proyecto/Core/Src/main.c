@@ -19,9 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-
-
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "luces.h"
@@ -49,6 +46,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim4;
+DMA_HandleTypeDef hdma_tim4_ch2;
 
 /* USER CODE BEGIN PV */
 
@@ -57,6 +55,7 @@ TIM_HandleTypeDef htim4;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_TIM4_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -95,16 +94,34 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-
+  uint16_t mi_tablero[NUM_LEDS];
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  void tablero(htim4);
+	  // Pintamos cada LED con el dato binario que vos quieras desde afuera
+
+
+      for (int i = 0; i < NUM_LEDS; i++) {
+          mi_tablero[i] = 0x0000;
+      }
+
+	        // Aseguramos que el resto de los 16 LEDs queden completamente APAGADOS
+	        for (int i = 0; i < NUM_LEDS; i++) {
+	            mi_tablero[i] = 0x0020;
+
+
+	        // Escupimos el tablero al hardware por DMA
+	        enviar_numero_binario(&htim4, mi_tablero);
+
+	        // Delay de 800ms para poder apreciar los colores fijos
+	        HAL_Delay(100);
+	        }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -180,9 +197,9 @@ static void MX_TIM4_Init(void)
   htim4.Instance = TIM4;
   htim4.Init.Prescaler = 0;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 63999;
+  htim4.Init.Period = 15;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
   {
     Error_Handler();
@@ -214,6 +231,22 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 2 */
   HAL_TIM_MspPostInit(&htim4);
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Stream3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);
 
 }
 
