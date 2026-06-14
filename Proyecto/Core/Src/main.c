@@ -122,6 +122,27 @@ int main(void)
 	        // Delay de 800ms para poder apreciar los colores fijos
 	        HAL_Delay(100);
 	        }
+	        for (int i = 0; i < 4; i++) {
+
+	        	            mi_tablero[i] = 0x0800;
+
+
+	        	        // Escupimos el tablero al hardware por DMA
+	        	        enviar_numero_binario(&htim4, mi_tablero);
+        				mi_tablero[i] = 0x0020;
+	        	        // Delay de 800ms para poder apreciar los colores fijos
+	        	        HAL_Delay(500);
+	        	        }
+	        for (int i = 16; i < 20; i++) {
+	        	            mi_tablero[i] = 0x0800;
+
+
+	        	        // Escupimos el tablero al hardware por DMA
+	        	        enviar_numero_binario(&htim4, mi_tablero);
+	        	        mi_tablero[i] = 0x0020;
+	        	        // Delay de 800ms para poder apreciar los colores fijos
+	        	        HAL_Delay(500);
+	        	        }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
