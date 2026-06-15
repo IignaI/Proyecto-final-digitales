@@ -1,1 +1,4 @@
-../Core/Src/luces.c:19:6:enviar_numero_binario	5
+../Core/Src/luces.c:16:6:actualizar_matriz	5
+../Core/Src/luces.c:55:6:mapeo	4
+../Core/Src/luces.c:76:6:escribir	1
+../Core/Src/luces.c:82:6:caer_en_columna	8
