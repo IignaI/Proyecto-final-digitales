@@ -97,7 +97,17 @@ int main(void)
   MX_DMA_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-  uint16_t mi_tablero[NUM_LEDS];
+  uint32_t mi_matriz[FILAS][COLUMNAS] = {
+      // Col 0     Col 1     Col 2     Col 3
+      {0x000002, 0x000000, 0x000000, 0x000002},  // Fila 0 (Arriba)
+      {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 1
+      {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 2
+      {0x000000, 0x000002, 0x000200, 0x000000},  // Fila 3
+      {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 4
+      {0x000002, 0x000002, 0x000000, 0x000000},  // Fila 5
+      {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 6
+      {0x000002, 0x000000, 0x000000, 0x000002}   // Fila 7 (Abajo)
+  };
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -107,21 +117,18 @@ int main(void)
 	  // Pintamos cada LED con el dato binario que vos quieras desde afuera
 
 
-      for (int i = 0; i < NUM_LEDS; i++) {
-          mi_tablero[i] = 0x0000;
-      }
 
-	        // Aseguramos que el resto de los 16 LEDs queden completamente APAGADOS
-	        for (int i = 0; i < NUM_LEDS; i++) {
-	            mi_tablero[i] = 0x0020;
+	        // Escupimos el tablero al  por DMA
+	        escribir(mi_matriz,&htim4);
 
 
-	        // Escupimos el tablero al hardware por DMA
-	        actualizar_matriz(&htim4, mi_tablero);
 
-	        // Delay de 800ms para poder apreciar los colores fijos
-	        HAL_Delay(100);
+	        HAL_Delay(1000);
+	        for (int i =1; i < NUM_LEDS; i++) {
+	            tablero_interno[i] = 0;
 	        }
+	        actualizar_matriz(&htim4,tablero_interno);
+	        HAL_Delay(1000);
 
     /* USER CODE END WHILE */
 

@@ -1,1 +1,3 @@
 ../Core/Src/luces.c:15:6:actualizar_matriz	48	static
+../Core/Src/luces.c:54:6:mapeo	40	static
+../Core/Src/luces.c:75:6:escribir	16	static

@@ -7,6 +7,8 @@
 
 #ifndef INC_LUCES_H_
 #define INC_LUCES_H_
+#define COLUMNAS     4   // Cantidad de columnas
+#define FILAS      8   // Cantidad de filas
 #define MATRIZ_ANCHO     4   // Cantidad de columnas
 #define MATRIZ_ALTO      8   // Cantidad de filas
 #define BITS_PER_LED  	 24
@@ -15,6 +17,11 @@
 #define NUM_LEDS      	 (MATRIZ_ANCHO * MATRIZ_ALTO)
 #define TOTAL_BITS    	 (NUM_LEDS * BITS_PER_LED)
 #define RESET_BITS 		 (TOTAL_BITS + BITS_RESET_NETO) //mado un 0 a todos los leds y le sumo 50us para el ultimo (si no lo hacia no me funcionaba)
-void actualizar_matriz(TIM_HandleTypeDef *htim, uint16_t *lista_colores);
+
+extern uint32_t tablero_interno[NUM_LEDS];
+
+void actualizar_matriz(TIM_HandleTypeDef *htim, uint32_t *lista_colores);
+void mapeo(uint32_t matriz[FILAS][COLUMNAS], uint32_t tablero[NUM_LEDS]);
+void escribir(uint32_t matriz[FILAS][COLUMNAS], TIM_HandleTypeDef *htim);
 
 #endif /* INC_LUCES_H_ */
