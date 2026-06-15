@@ -9,6 +9,7 @@
 
 uint32_t pwm_buffer[START_BITS + TOTAL_BITS + RESET_BITS]; //tamaño de mi buffer de datos que depende del tamaño del tablero
 uint32_t tablero_interno[NUM_LEDS];
+volatile int animacion_en_progreso = 0;
 #define PWM_BIT_0  5   // 400ns
 #define PWM_BIT_1  10  // 800ns
 
@@ -74,12 +75,68 @@ void mapeo(uint32_t matriz[FILAS][COLUMNAS], uint32_t tablero[NUM_LEDS]){
 
 void escribir(uint32_t matriz[FILAS][COLUMNAS], TIM_HandleTypeDef *htim) {
 
-    // Declaramos el tablero de trabajo de forma interna y segura para el DMA
-
-    // 1. Mapeamos la matriz lógica en nuestro tablero temporal
     mapeo(matriz, tablero_interno);
-
-    // 2. Pasamos el puntero 'htim' directo y el tablero interno sin errores de tipos
     actualizar_matriz(htim, tablero_interno);
+}
+
+void caer_en_columna(uint32_t matriz[FILAS][COLUMNAS], int columna_elegida, uint32_t color, TIM_HandleTypeDef *htim) {
+
+    // VARIABLES ESTÁTICAS (Mantienen su memoria interna entre llamadas)
+    static int i = 0;
+    static int fila_destino = -1;
+    static int animacion_activa = 0;
+
+    // ¡NUEVA VARIABLE!: Guarda el tiempo del último paso de la animación
+    static uint32_t tiempo_anterior = 0;
+
+    // 1. PRIMER PASO: Busco el 0 más bajo en la columna (Solo la primera vez)
+    if (animacion_activa == 0) {
+        fila_destino = -1;
+
+        for (int fila = FILAS - 1; fila >= 0; fila--) {
+            if (matriz[fila][columna_elegida] == 0x000000) {
+                fila_destino = fila;
+                break;
+            }
+        }
+
+        // Si la columna está llena, apagamos la bandera general y salimos
+        if (fila_destino == -1) {
+            animacion_en_progreso = 0;
+            return;
+        }
+
+        i = 0;
+        animacion_activa = 1;
+        animacion_en_progreso = 1;
+        tiempo_anterior = HAL_GetTick();
+    }
+
+//defino tiempo de caida
+    if (HAL_GetTick() - tiempo_anterior < 250) {
+        return; // saltamos la funcion
+    }
+
+    tiempo_anterior = HAL_GetTick(); // Actualizamos el cronómetro para el próximo paso
+
+    // cae una posicion
+    if (i <= fila_destino) {
+        matriz[i][columna_elegida] = color;
+
+        // Elimino la posición anterior
+        if (i > 0) {
+            matriz[i - 1][columna_elegida] = 0;
+        }
+
+        mapeo(matriz, tablero_interno);
+        actualizar_matriz(htim, tablero_interno);
+
+        i++; // Dejamos listo el índice para la próxima fila
+    }
+    else {
+        // llego al limite
+        animacion_activa = 0;       // Reseteamos el motor interno de tiempo
+        animacion_en_progreso = 0;  // Le avisamos al main que el teclado ya puede revivir
+    }
 }
 

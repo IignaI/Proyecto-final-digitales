@@ -1,3 +1,4 @@
-../Core/Src/luces.c:15:6:actualizar_matriz	48	static
-../Core/Src/luces.c:54:6:mapeo	40	static
-../Core/Src/luces.c:75:6:escribir	16	static
+../Core/Src/luces.c:16:6:actualizar_matriz	48	static
+../Core/Src/luces.c:55:6:mapeo	40	static
+../Core/Src/luces.c:76:6:escribir	16	static
+../Core/Src/luces.c:82:6:caer_en_columna	32	static

@@ -99,14 +99,14 @@ int main(void)
   /* USER CODE BEGIN 2 */
   uint32_t mi_matriz[FILAS][COLUMNAS] = {
       // Col 0     Col 1     Col 2     Col 3
-      {0x000002, 0x000000, 0x000000, 0x000002},  // Fila 0 (Arriba)
+      {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 0 (Arriba)
       {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 1
       {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 2
       {0x000000, 0x000002, 0x000200, 0x000000},  // Fila 3
-      {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 4
-      {0x000002, 0x000002, 0x000000, 0x000000},  // Fila 5
-      {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 6
-      {0x000002, 0x000000, 0x000000, 0x000002}   // Fila 7 (Abajo)
+      {0x000000, 0x000002, 0x000200, 0x000000},  // Fila 4
+      {0x000002, 0x000002, 0x000200, 0x000000},  // Fila 5
+      {0x000002, 0x000002, 0x000200, 0x000000},  // Fila 6
+      {0x000002, 0x000002, 0x000200, 0x000002}   // Fila 7 (Abajo)
   };
   /* USER CODE END 2 */
 
@@ -119,16 +119,11 @@ int main(void)
 
 
 	        // Escupimos el tablero al  por DMA
-	        escribir(mi_matriz,&htim4);
+
+	        caer_en_columna(mi_matriz, 3 , 0x00020000,&htim4);
 
 
 
-	        HAL_Delay(1000);
-	        for (int i =1; i < NUM_LEDS; i++) {
-	            tablero_interno[i] = 0;
-	        }
-	        actualizar_matriz(&htim4,tablero_interno);
-	        HAL_Delay(1000);
 
     /* USER CODE END WHILE */
 

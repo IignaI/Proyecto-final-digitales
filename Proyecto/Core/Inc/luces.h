@@ -23,5 +23,6 @@ extern uint32_t tablero_interno[NUM_LEDS];
 void actualizar_matriz(TIM_HandleTypeDef *htim, uint32_t *lista_colores);
 void mapeo(uint32_t matriz[FILAS][COLUMNAS], uint32_t tablero[NUM_LEDS]);
 void escribir(uint32_t matriz[FILAS][COLUMNAS], TIM_HandleTypeDef *htim);
+void caer_en_columna(uint32_t matriz[FILAS][COLUMNAS], int columna_elegida, uint32_t color, TIM_HandleTypeDef *htim);
 
 #endif /* INC_LUCES_H_ */
