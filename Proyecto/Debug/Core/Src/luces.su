@@ -1,1 +1,6 @@
-../Core/Src/luces.c:19:6:enviar_numero_binario	48	static
+../Core/Src/luces.c:17:6:actualizar_matriz	48	static
+../Core/Src/luces.c:55:6:mapeo	40	static
+../Core/Src/luces.c:76:6:escribir	16	static
+../Core/Src/luces.c:82:6:caer_en_columna	32	static
+../Core/Src/luces.c:145:6:animacion_victoria	24	static
+../Core/Src/luces.c:218:6:fin	32	static

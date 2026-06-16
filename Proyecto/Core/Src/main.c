@@ -49,7 +49,7 @@ TIM_HandleTypeDef htim4;
 DMA_HandleTypeDef hdma_tim4_ch2;
 
 /* USER CODE BEGIN PV */
-
+volatile int ocupado = 0;//definido paratodos los subsistemas me  parece que deberia arreglarlo o no ponerlo aca
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -98,6 +98,17 @@ int main(void)
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   uint16_t mi_tablero[NUM_LEDS];
+  uint32_t mi_matriz[FILAS][COLUMNAS] = {
+      // Col 0     Col 1     Col 2     Col 3
+      {0x000002, 0x000000, 0x000000, 0x000000},  // Fila 0 (Arriba)
+      {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 1
+      {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 2
+      {0x000000, 0x000000, 0x000002, 0x000000},  // Fila 3
+      {0x000000, 0x000000, 0x020000, 0x000000},  // Fila 4
+      {0x000002, 0x000000, 0x020000, 0x020000},  // Fila 5
+      {0x020000, 0x020000, 0x000002, 0x020000},  // Fila 6
+      {0x000002, 0x000002, 0x020000, 0x000002}   // Fila 7 (Abajo)
+  };
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,43 +117,11 @@ int main(void)
   {
 	  // Pintamos cada LED con el dato binario que vos quieras desde afuera
 
+	        caer_en_columna(mi_matriz, 3 , 0x00020000,&htim4);
+	  animacion_victoria(mi_matriz, 4, 3, 5, 3, 6, 3, &htim4);
+	 fin(mi_matriz, &htim4 );
+	 ocupado=1;
 
-      for (int i = 0; i < NUM_LEDS; i++) {
-          mi_tablero[i] = 0x0000;
-      }
-
-	        // Aseguramos que el resto de los 16 LEDs queden completamente APAGADOS
-	        for (int i = 0; i < NUM_LEDS; i++) {
-	            mi_tablero[i] = 0x0020;
-
-
-	        // Escupimos el tablero al hardware por DMA
-	        enviar_numero_binario(&htim4, mi_tablero);
-
-	        // Delay de 800ms para poder apreciar los colores fijos
-	        HAL_Delay(100);
-	        }
-	        for (int i = 0; i < 4; i++) {
-
-	        	            mi_tablero[i] = 0x0800;
-
-
-	        	        // Escupimos el tablero al hardware por DMA
-	        	        enviar_numero_binario(&htim4, mi_tablero);
-        				mi_tablero[i] = 0x0020;
-	        	        // Delay de 800ms para poder apreciar los colores fijos
-	        	        HAL_Delay(500);
-	        	        }
-	        for (int i = 16; i < 20; i++) {
-	        	            mi_tablero[i] = 0x0800;
-
-
-	        	        // Escupimos el tablero al hardware por DMA
-	        	        enviar_numero_binario(&htim4, mi_tablero);
-	        	        mi_tablero[i] = 0x0020;
-	        	        // Delay de 800ms para poder apreciar los colores fijos
-	        	        HAL_Delay(500);
-	        	        }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
