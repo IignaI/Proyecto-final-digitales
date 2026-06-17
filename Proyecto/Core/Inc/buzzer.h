@@ -6,5 +6,5 @@
  */
 
 
-void tablero(TIM_HandleTypeDef *timer);
+void buzzer(TIM_HandleTypeDef *timer);
 

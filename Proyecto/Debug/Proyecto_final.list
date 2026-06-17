@@ -41,9 +41,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  18 .debug_line   0000b9e7  00000000  00000000  0002f914  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000c52f0  00000000  00000000  0003b2fb  2**0
+ 19 .debug_str    000c52ef  00000000  00000000  0003b2fb  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  001005eb  2**0
+ 20 .comment      00000043  00000000  00000000  001005ea  2**0
                   CONTENTS, READONLY
  21 .debug_frame  00002a24  00000000  00000000  00100630  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -371,13 +371,13 @@ Disassembly of section .text:
  80004f0:	4770      	bx	lr
  80004f2:	bf00      	nop
 
-080004f4 <tablero>:
+080004f4 <buzzer>:
  */
 #include "stm32f4xx_hal.h"
 #include "buzzer.h"
 
 uint16_t escala_arr[] = {47891, 42516, 37992, 35815, 31886, 28408, 25302, 23899};//do re mi fa sol la si do (creo)
-void tablero(TIM_HandleTypeDef *timer){
+void buzzer(TIM_HandleTypeDef *timer){
  80004f4:	b580      	push	{r7, lr}
  80004f6:	b084      	sub	sp, #16
  80004f8:	af00      	add	r7, sp, #0
@@ -385,7 +385,7 @@ void tablero(TIM_HandleTypeDef *timer){
     // Obtenemos el valor máximo del período desde la configuración (12499)
 
 	timer->Instance->ARR=escala_arr[0];
- 80004fc:	4b11      	ldr	r3, [pc, #68]	@ (8000544 <tablero+0x50>)
+ 80004fc:	4b11      	ldr	r3, [pc, #68]	@ (8000544 <buzzer+0x50>)
  80004fe:	881a      	ldrh	r2, [r3, #0]
  8000500:	687b      	ldr	r3, [r7, #4]
  8000502:	681b      	ldr	r3, [r3, #0]
@@ -485,9 +485,9 @@ int main(void)
   while (1)
   {
 	  // Pintamos cada LED con el dato binario que vos quieras desde afuera
-	  tablero(&htim3);
+	  buzzer(&htim3);
  8000574:	4802      	ldr	r0, [pc, #8]	@ (8000580 <main+0x38>)
- 8000576:	f7ff ffbd 	bl	80004f4 <tablero>
+ 8000576:	f7ff ffbd 	bl	80004f4 <buzzer>
  800057a:	e7fb      	b.n	8000574 <main+0x2c>
  800057c:	08002f48 	.word	0x08002f48
  8000580:	20000038 	.word	0x20000038

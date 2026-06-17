@@ -8,7 +8,7 @@
 #include "buzzer.h"
 
 uint16_t escala_arr[] = {47891, 42516, 37992, 35815, 31886, 28408, 25302, 23899};//do re mi fa sol la si do (creo)
-void tablero(TIM_HandleTypeDef *timer){
+void buzzer(TIM_HandleTypeDef *timer){
     // Obtenemos el valor máximo del período desde la configuración (12499)
 
 	timer->Instance->ARR=escala_arr[0];
