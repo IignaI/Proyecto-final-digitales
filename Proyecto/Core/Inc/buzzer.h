@@ -6,3 +6,5 @@
  */
 
 
+void tablero(TIM_HandleTypeDef *timer);
+
