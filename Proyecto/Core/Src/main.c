@@ -119,11 +119,12 @@ int main(void)
   while (1)
   {
 	  // Pintamos cada LED con el dato binario que vos quieras desde afuera
-	  buzzer(&htim3);
-	    //    caer_en_columna(mi_matriz, 3 , 0x00020000,&htim4);
-	  //animacion_victoria(mi_matriz, 4, 3, 5, 3, 6, 3, &htim4);
-	 //fin(mi_matriz, &htim4 );
-	// ocupado=1;
+
+	    caer_en_columna(mi_matriz, 3 , 0x00020000,&htim4);
+	  animacion_victoria(mi_matriz, 4, 3, 5, 3, 6, 3, &htim4);
+	 fin(mi_matriz, &htim4 );
+	 ocupado=1;
+	 buzzer(&htim3);
 
     /* USER CODE END WHILE */
 
