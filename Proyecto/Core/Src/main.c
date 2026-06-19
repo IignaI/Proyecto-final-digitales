@@ -51,6 +51,9 @@ DMA_HandleTypeDef hdma_tim4_ch2;
 
 /* USER CODE BEGIN PV */
 volatile int ocupado = 0;//definido paratodos los subsistemas me  parece que deberia arreglarlo o no ponerlo aca
+volatile int X=1;
+volatile int Y=1;
+volatile char jugador;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -119,15 +122,15 @@ int main(void)
   while (1)
   {
 	  // Pintamos cada LED con el dato binario que vos quieras desde afuera
-
-	    caer_en_columna(mi_matriz, 3 , 0x00020000,&htim4);
-	  animacion_victoria(mi_matriz, 4, 3, 5, 3, 6, 3, &htim4);
-	 fin(mi_matriz, &htim4 );
-	 ocupado=1;
-	 buzzer(&htim3);
+//escribir(mi_matriz,&htim4);
+	    //caer_en_columna(mi_matriz, 3 , 0x00020000,&htim4);
+	  //animacion_victoria(mi_matriz, 4, 3, 5, 3, 6, 3, &htim4);
+	 //fin(mi_matriz, &htim4 );
+	 //ocupado=1;
+	 //buzzer(&htim3);
 
     /* USER CODE END WHILE */
-
+	  PruebaConLed();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -320,13 +323,31 @@ static void MX_DMA_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* USER CODE BEGIN MX_GPIO_Init_1 */
 
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : PE8 PE9 PE10 PE11 */
+  GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PE12 PE13 PE14 PE15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 

@@ -18,4 +18,6 @@
 #define tcl_pin_y1 GPIO_PIN_8
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
+void PruebaConLed();
+void reiniciar_filas_tcl();
 #endif /* INC_TECLADO_H_ */

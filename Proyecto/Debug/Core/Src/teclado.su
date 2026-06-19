@@ -1,0 +1,5 @@
+../Core/Src/teclado.c:14:6:HAL_GPIO_EXTI_Callback	24	static
+../Core/Src/teclado.c:86:6:rutina_leer_filas	16	static
+../Core/Src/teclado.c:137:6:reiniciar_filas_tcl	8	static
+../Core/Src/teclado.c:144:6:delay_bruto	16	static
+../Core/Src/teclado.c:151:6:PruebaConLed	8	static
