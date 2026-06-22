@@ -7,9 +7,10 @@
 #include "stm32f4xx_hal.h"
 #include "fsm.h"
 #include "stdio.h"
+#include "luces.h"
 
 extern int matriz[8][4];
-
+extern TIM_HandleTypeDef htim4;
 void imprimir_matriz_actual(void)
 {
 	printf("Matriz actual:\n");
@@ -25,4 +26,5 @@ void imprimir_matriz_actual(void)
 	}
 
 	return 0;
+	escribir(matriz,&htim4);
 }

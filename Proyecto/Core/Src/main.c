@@ -200,7 +200,7 @@ estado_siguiente = estado_inicio;
 	 //fin(mi_matriz, &htim4 );
 	//PruebaConLed();
 	  //ocupado=1;
-	 //buzzer(&htim3);
+	// buzzer(&htim3);
 
     /* USER CODE END WHILE */
 
