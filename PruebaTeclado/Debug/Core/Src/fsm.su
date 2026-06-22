@@ -1,0 +1,6 @@
+../Core/Src/fsm.c:58:6:actualizar_fsm_juego	8	static
+../Core/Src/fsm.c:209:6:asignar_jugada	24	static
+../Core/Src/fsm.c:286:6:comprobar	96	static
+../Core/Src/fsm.c:358:6:animacion_caida_bomba	48	static
+../Core/Src/fsm.c:378:6:ficha_bomba	4	static
+../Core/Src/fsm.c:383:6:comentar	16	static
