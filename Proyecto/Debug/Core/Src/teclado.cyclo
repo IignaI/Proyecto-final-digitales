@@ -1,5 +1,5 @@
-../Core/Src/teclado.c:14:6:HAL_GPIO_EXTI_Callback	15
-../Core/Src/teclado.c:86:6:rutina_leer_filas	5
-../Core/Src/teclado.c:137:6:reiniciar_filas_tcl	1
-../Core/Src/teclado.c:144:6:delay_bruto	2
-../Core/Src/teclado.c:151:6:PruebaConLed	9
+../Core/Src/teclado.c:32:6:HAL_GPIO_EXTI_Callback	18
+../Core/Src/teclado.c:124:6:rutina_leer_filas	5
+../Core/Src/teclado.c:169:6:reiniciar_filas_tcl	1
+../Core/Src/teclado.c:176:6:delay_bruto	2
+../Core/Src/teclado.c:183:6:PruebaConLed	9

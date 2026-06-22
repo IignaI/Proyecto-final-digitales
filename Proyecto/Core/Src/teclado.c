@@ -1,19 +1,39 @@
 /*
  * teclado.c
  *
- *  Created on: Jun 12, 2026
- *      Author: iniak
+ *  Created on: Jun 20, 2026
+ *      Author: marcos
  */
+
 #include "stm32f4xx_hal.h"
 #include "teclado.h"
+#include "stdio.h"
+
+#define tcl_puerto GPIOE
+#define tcl_pin_x4 GPIO_PIN_15
+#define tcl_pin_x3 GPIO_PIN_14
+#define tcl_pin_x2 GPIO_PIN_13
+#define tcl_pin_x1 GPIO_PIN_12
+#define tcl_pin_y4 GPIO_PIN_11
+#define tcl_pin_y3 GPIO_PIN_10
+#define tcl_pin_y2 GPIO_PIN_9
+#define tcl_pin_y1 GPIO_PIN_8
+
+typedef enum{
+    evento_presionar
+}evento;
 
 extern volatile int X;
 extern volatile int Y;
 extern volatile char jugador;
 
+extern volatile evento evento_actual;
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     // Verificas qué pin fue el que generó la interrupción
+	if (evento_actual != evento_presionar)
+	{
     int Xf = 1;
 	switch (GPIO_Pin)
 	case tcl_pin_x1:
@@ -25,12 +45,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		            X = 1;
 		            HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_SET); //prueba
 		            rutina_leer_filas(tcl_pin_x1);
+		            while (HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x1)==0)
+					{
+						//printf("nada\n");
+					}
 		        }
 
-		    while (HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x1)==0)
-		    {
-		    	//bucle de retencion
-		    }
+
 		break;
 	case tcl_pin_x2:
 		    delay_bruto(100000);
@@ -40,12 +61,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		            X = 2;
 		            HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_SET); //prueba
 		            rutina_leer_filas(tcl_pin_x2);
+		            while (HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x2)==0)
+					{
+						//printf("nada\n");
+					}
 		        }
-
-		    while (HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x2)==0)
-		    {
-		    	//bucle de retencion
-		    }
 
 		break;
 	case tcl_pin_x3:
@@ -56,12 +76,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		            X = 3;
 				    HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_SET); //prueba
 				    rutina_leer_filas(tcl_pin_x3);
+				    while (HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x3)==0)
+					{
+						//printf("nada\n");
+					}
 		        }
+		        else
 
-		    while (HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x3)==0)
-		    {
-		    	//bucle de retencion
-		    }
+
 		break;
 	case tcl_pin_x4:
 		    delay_bruto(100000);
@@ -71,18 +93,34 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		            X = 4;
 				    HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_SET); //prueba
 				    rutina_leer_filas(tcl_pin_x4);
+				    while (HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x4)==0)
+				    {
+				    	//printf("nada\n");
+				    }
 		        }
 
-		    while (HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x4)==0)
-		    {
-		    	//bucle de retencion
-		    }
 
 		break;
 	default:
 		break;
 	}
+	}
+	else
+	{
+		printf("Rebote o Procesamiento en curso \n");
+	}
+	if (Y != 0 && X != 0)
+	    {
+	    	printf("Evento: evento_presionar, coordenada ");
+	    	printf("(X,Y)=(");
+	    	printf("%d", X);
+	    	printf(",");
+	    	printf("%d", Y);
+	    	printf(")\n");
+	    	evento_actual = evento_presionar;
+	    }
 }
+
 void rutina_leer_filas(uint16_t pin_x)
 {
 	Y = 0;
@@ -125,12 +163,6 @@ void rutina_leer_filas(uint16_t pin_x)
     {
     	Y = 4;
     }
-    if (Y != 0)
-    {
-    	//Si se llego a este bucle entonces se detecto una pulsacion X != 0 y una Y =! 0
-    	//evento_actual = evento_presionar;
-    }
-
     reiniciar_filas_tcl();
 }
 
@@ -279,4 +311,3 @@ void PruebaConLed()
 	  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_RESET);
 	}
 }
-

@@ -27,16 +27,57 @@
 #include "buzzer.h"
 #include "logica.h"
 #include "cpu.h"
+#include "stm32f4xx_hal.h"
+#include "imp_matriz.h"
+#include "fsm.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+typedef enum{
+    estado_inicio,
+    estado_inicializar,   //leer SW por primera vez
+    estado_turno_A,
+    estado_turno_B,
+    estado_esperar_soltar,
+    estado_asignar_jugada,
+    estado_comprobar_jugada,
+    estado_gana_A,
+    estado_gana_B,
+    estado_empate,
+    estado_fin_del_juego,
+	estado_menu
+}estado;
+
+typedef enum{
+    evento_presionar,   //evento_1 ~ boton presionado
+    evento_jugada_invalida_de_A,
+    evento_jugada_invalida_de_B,
+    evento_jugada_valida,
+    evento_sin_presionar,
+    evento_no_gana_A,
+    evento_no_gana_B,
+	evento_gana_A,
+	evento_gana_B,
+    evento_soltar,
+	evento_fin_del_juego,
+	evento_nada
+}evento;
 
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define tcl_puerto GPIOE
+#define tcl_pin_x4 GPIO_PIN_15
+#define tcl_pin_x3 GPIO_PIN_14
+#define tcl_pin_x2 GPIO_PIN_13
+#define tcl_pin_x1 GPIO_PIN_12
+#define tcl_pin_y4 GPIO_PIN_11
+#define tcl_pin_y3 GPIO_PIN_10
+#define tcl_pin_y2 GPIO_PIN_9
+#define tcl_pin_y1 GPIO_PIN_8
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -51,9 +92,24 @@ DMA_HandleTypeDef hdma_tim4_ch2;
 
 /* USER CODE BEGIN PV */
 volatile int ocupado = 0;//definido paratodos los subsistemas me  parece que deberia arreglarlo o no ponerlo aca
-volatile int X=1;
-volatile int Y=1;
 volatile char jugador;
+volatile int X = 0;
+volatile int Y = 0;
+volatile evento evento_actual;
+volatile estado estado_siguiente;
+volatile int Xf;
+volatile int Yf;
+volatile int matriz[8][4] =
+{
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0}
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,12 +119,19 @@ static void MX_DMA_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
-
+void imprimir_matriz_actual(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+int _write(int file, char *ptr , int len)
+{
+	for (int i=0; i<len; i++)
+	{
+		ITM_SendChar(*ptr++);
+	}
+	return len;
+}
 /* USER CODE END 0 */
 
 /**
@@ -87,13 +150,19 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  HAL_GPIO_WritePin(tcl_puerto,tcl_pin_y1,GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(tcl_puerto,tcl_pin_y2,GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(tcl_puerto,tcl_pin_y3,GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(tcl_puerto,tcl_pin_y4,GPIO_PIN_RESET);
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+printf(" Inicializando la consola...\n");
+evento_actual = evento_nada;
+estado_siguiente = estado_inicio;
 
   /* USER CODE END SysInit */
 
@@ -122,15 +191,19 @@ int main(void)
   while (1)
   {
 	  // Pintamos cada LED con el dato binario que vos quieras desde afuera
-//escribir(mi_matriz,&htim4);
-	    //caer_en_columna(mi_matriz, 3 , 0x00020000,&htim4);
+// escribir(mi_matriz,&htim4);
+ actualizar_fsm_juego();
+ escribir(matriz,&htim4);
+ HAL_Delay(500);
+	   // caer_en_columna(mi_matriz, 3 , 0x00020000,&htim4);
 	  //animacion_victoria(mi_matriz, 4, 3, 5, 3, 6, 3, &htim4);
 	 //fin(mi_matriz, &htim4 );
-	 //ocupado=1;
+	//PruebaConLed();
+	  //ocupado=1;
 	 //buzzer(&htim3);
 
     /* USER CODE END WHILE */
-	  PruebaConLed();
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -332,9 +405,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PE8 PE9 PE10 PE11 */
   GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11;
@@ -348,6 +425,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PD12 */
+  GPIO_InitStruct.Pin = GPIO_PIN_12;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 

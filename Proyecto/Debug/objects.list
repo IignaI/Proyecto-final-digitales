@@ -1,6 +1,8 @@
 "./Core/Src/adicionales.o"
 "./Core/Src/buzzer.o"
 "./Core/Src/cpu.o"
+"./Core/Src/fsm.o"
+"./Core/Src/imp_matriz.o"
 "./Core/Src/logica.o"
 "./Core/Src/luces.o"
 "./Core/Src/main.o"
