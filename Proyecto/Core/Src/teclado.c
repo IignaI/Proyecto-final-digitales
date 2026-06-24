@@ -11,8 +11,8 @@
 
 #define tcl_puerto GPIOE
 #define tcl_pin_x4 GPIO_PIN_15
-#define tcl_pin_x3 GPIO_PIN_14
-#define tcl_pin_x2 GPIO_PIN_13
+#define tcl_pin_x3 GPIO_PIN_13
+#define tcl_pin_x2 GPIO_PIN_14//
 #define tcl_pin_x1 GPIO_PIN_12
 #define tcl_pin_y4 GPIO_PIN_11
 #define tcl_pin_y3 GPIO_PIN_10
@@ -20,27 +20,31 @@
 #define tcl_pin_y1 GPIO_PIN_8
 
 typedef enum{
-    evento_presionar
+    evento_presionar,
+	evento_soltar
 }evento;
 
 extern volatile int X;
 extern volatile int Y;
 extern volatile char jugador;
+extern volatile int bloqueo;
+extern volatile uint32_t T;
 
 extern volatile evento evento_actual;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     // Verificas qué pin fue el que generó la interrupción
-	if (evento_actual != evento_presionar)
-	{
-    int Xf = 1;
+	if (HAL_GetTick() > T+500 && bloqueo == 0)
+		{
+    int Xf;
 	switch (GPIO_Pin)
 	case tcl_pin_x1:
 	{
-		    delay_bruto(100000);
+
 		    Xf = HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x1);
-		        if (Xf == 0)
+		    delay_bruto(100000);
+		        if (Xf == 0 && Xf == HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x1))
 		        {
 		            X = 1;
 		            HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_SET); //prueba
@@ -49,14 +53,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 					{
 						//printf("nada\n");
 					}
+		            T=HAL_GetTick();
 		        }
 
 
 		break;
 	case tcl_pin_x2:
-		    delay_bruto(100000);
+
 		    Xf = HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x2);
-		        if (Xf == 0)
+		    delay_bruto(100000);
+		    if (Xf == 0 && Xf == HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x2))
 		        {
 		            X = 2;
 		            HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_SET); //prueba
@@ -65,13 +71,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 					{
 						//printf("nada\n");
 					}
+		            T=HAL_GetTick();
 		        }
 
 		break;
 	case tcl_pin_x3:
-		    delay_bruto(100000);
+
 		    Xf = HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x3);
-		        if (Xf == 0)
+		    delay_bruto(100000);
+		    if (Xf == 0 && Xf == HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x3))
 		        {
 		            X = 3;
 				    HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_SET); //prueba
@@ -80,15 +88,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 					{
 						//printf("nada\n");
 					}
+				    T=HAL_GetTick();
 		        }
 		        else
 
-
 		break;
 	case tcl_pin_x4:
-		    delay_bruto(100000);
+
 		    Xf = HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x4);
-		        if (Xf == 0)
+		    delay_bruto(100000);
+		    if (Xf == 0 && Xf == HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x4))
 		        {
 		            X = 4;
 				    HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_SET); //prueba
@@ -97,16 +106,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				    {
 				    	//printf("nada\n");
 				    }
+				    T=HAL_GetTick();
 		        }
 
 
 		break;
 	default:
 		break;
-	}
-	}
-	else
-	{
+
 		printf("Rebote o Procesamiento en curso \n");
 	}
 	if (Y != 0 && X != 0)
@@ -118,7 +125,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	    	printf("%d", Y);
 	    	printf(")\n");
 	    	evento_actual = evento_presionar;
+	    	printf("Evento: evento_presionar \n");
 	    }
+		}
 }
 
 void rutina_leer_filas(uint16_t pin_x)

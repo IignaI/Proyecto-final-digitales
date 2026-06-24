@@ -71,8 +71,8 @@ typedef enum{
 /* USER CODE BEGIN PD */
 #define tcl_puerto GPIOE
 #define tcl_pin_x4 GPIO_PIN_15
-#define tcl_pin_x3 GPIO_PIN_14
-#define tcl_pin_x2 GPIO_PIN_13
+#define tcl_pin_x3 GPIO_PIN_13
+#define tcl_pin_x2 GPIO_PIN_14
 #define tcl_pin_x1 GPIO_PIN_12
 #define tcl_pin_y4 GPIO_PIN_11
 #define tcl_pin_y3 GPIO_PIN_10
@@ -93,12 +93,15 @@ DMA_HandleTypeDef hdma_tim4_ch2;
 /* USER CODE BEGIN PV */
 volatile int ocupado = 0;//definido paratodos los subsistemas me  parece que deberia arreglarlo o no ponerlo aca
 volatile char jugador;
-volatile int X = 0;
-volatile int Y = 0;
+volatile int X;
+volatile int Y;
 volatile evento evento_actual;
 volatile estado estado_siguiente;
 volatile int Xf;
 volatile int Yf;
+volatile uint32_t T;
+volatile uint32_t TT;
+volatile int bloqueo = 0;
 volatile int matriz[8][4] =
 {
 		{0,0,0,0},
@@ -192,15 +195,18 @@ estado_siguiente = estado_inicio;
   {
 	  // Pintamos cada LED con el dato binario que vos quieras desde afuera
 // escribir(mi_matriz,&htim4);
- actualizar_fsm_juego();
- escribir(matriz,&htim4);
- HAL_Delay(500);
+ //actualizar_fsm_juego();
+ //escribir(matriz,&htim4);
+ //HAL_Delay(500);
 	   // caer_en_columna(mi_matriz, 3 , 0x00020000,&htim4);
 	  //animacion_victoria(mi_matriz, 4, 3, 5, 3, 6, 3, &htim4);
 	 //fin(mi_matriz, &htim4 );
 	//PruebaConLed();
 	  //ocupado=1;
 	 //buzzer(&htim3);
+	  HAL_Delay(1);
+
+	  actualizar_fsm_juego();
 
     /* USER CODE END WHILE */
 

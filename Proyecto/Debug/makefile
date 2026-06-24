@@ -60,8 +60,8 @@ all: main-build
 main-build: Proyecto_final.elf secondary-outputs
 
 # Tool invocations
-Proyecto_final.elf Proyecto_final.map: $(OBJS) $(USER_OBJS) C:\Users\iniak\Documents\GitHub\Proyecto-final-digitales\Proyecto\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Proyecto_final.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\iniak\Documents\GitHub\Proyecto-final-digitales\Proyecto\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Proyecto_final.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Proyecto_final.elf Proyecto_final.map: $(OBJS) $(USER_OBJS) /home/marcos/Documents/GitHub/Proyecto-final-digitales/Proyecto/STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Proyecto_final.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/marcos/Documents/GitHub/Proyecto-final-digitales/Proyecto/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Proyecto_final.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

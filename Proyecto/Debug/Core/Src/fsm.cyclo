@@ -1,6 +1,8 @@
-../Core/Src/fsm.c:58:6:actualizar_fsm_juego	22
-../Core/Src/fsm.c:217:6:asignar_jugada	11
-../Core/Src/fsm.c:294:6:comprobar	20
-../Core/Src/fsm.c:366:6:animacion_caida_bomba	5
-../Core/Src/fsm.c:386:6:ficha_bomba	1
-../Core/Src/fsm.c:391:6:comentar	1
+../Core/Src/fsm.c:60:6:actualizar_fsm_juego	17
+../Core/Src/fsm.c:160:6:asignar_jugada	14
+../Core/Src/fsm.c:236:6:comprobar	22
+../Core/Src/fsm.c:302:6:animacion_caida_bomba	9
+../Core/Src/fsm.c:339:6:bomba	50
+../Core/Src/fsm.c:407:6:gana	3
+../Core/Src/fsm.c:422:6:borrar	3
+../Core/Src/fsm.c:437:6:turno_anim	10
