@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 ../Core/Src/imp_matriz.c:17:6:imprimir_matriz_actual	16	static
+=======
+../Core/Src/imp_matriz.c:14:6:imprimir_matriz_actual	16	static
+>>>>>>> 1391137af51c82c6c749368ab794897564256442

@@ -74,8 +74,36 @@ void mapeo(uint32_t matriz[FILAS][COLUMNAS], uint32_t tablero[NUM_LEDS]){
 }
 
 void escribir(uint32_t matriz[FILAS][COLUMNAS], TIM_HandleTypeDef *htim) {
+	static uint32_t matrizi[FILAS][COLUMNAS] = {0};
+	int c=0;
+	int f=0;
 
-    mapeo(matriz, tablero_interno);
+	for (int i = 7; i >= 0; i--) {
+	            for (int j = 0; j < 4; j++) {
+	            	switch (j){
+	            	case 0:
+	            	        f=2;
+	            	        break;
+	            	    case 1:
+	            	        f=4;
+	            	        break;
+	            	    case 2:
+	            	        f=0;
+	            	        break;
+	            	    case 3:
+	            	        f=1;
+	            	        break;
+	            	}
+	            	if (matriz[i][j] == 1 ) {
+	            		matrizi[c][j] = 0x00000002;
+	            }
+	            	if (matriz[i][j] == 2 ) {
+	            		matrizi[c][j] = 0x00000200;
+	            }
+	        }
+	c++;
+	}
+    mapeo(matrizi, tablero_interno);
     actualizar_matriz(htim, tablero_interno);
 }
 
