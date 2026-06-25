@@ -203,15 +203,11 @@ estado_siguiente = estado_inicio;
 	 //fin(mi_matriz, &htim4 );
 	//PruebaConLed();
 	  //ocupado=1;
-<<<<<<< HEAD
 	 //buzzer(&htim3);
 	  HAL_Delay(1);
 
 	  //actualizar_fsm_juego(); //JUEGO COMUN
 	  actualizar_fsm_juego_vs_bot(); //JUEGO CONTRA EL BOT
-=======
-	// buzzer(&htim3);
->>>>>>> 1391137af51c82c6c749368ab794897564256442
 
     /* USER CODE END WHILE */
 

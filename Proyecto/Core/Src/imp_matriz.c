@@ -8,18 +8,12 @@
 #include "fsm.h"
 #include "stdio.h"
 #include "luces.h"
-<<<<<<< HEAD
 
 extern TIM_HandleTypeDef htim4;
 
 extern int matriz[8][4];
 uint32_t mi_matriz[8][4];
 
-=======
-
-extern int matriz[8][4];
-extern TIM_HandleTypeDef htim4;
->>>>>>> 1391137af51c82c6c749368ab794897564256442
 void imprimir_matriz_actual(void)
 {
 	//printf("Matriz actual:\n");
@@ -63,11 +57,6 @@ void imprimir_matriz_actual(void)
 			}
 		}
 
-<<<<<<< HEAD
 	escribir(mi_matriz,&htim4);
 
-=======
-	return 0;
-	escribir(matriz,&htim4);
->>>>>>> 1391137af51c82c6c749368ab794897564256442
 }
