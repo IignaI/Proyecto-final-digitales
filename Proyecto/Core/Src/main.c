@@ -176,17 +176,7 @@ estado_siguiente = estado_inicio;
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   //uint16_t mi_tablero[NUM_LEDS];
-  uint32_t mi_matriz[FILAS][COLUMNAS] = {
-      // Col 0     Col 1     Col 2     Col 3
-      {0x000002, 0x000000, 0x000000, 0x000000},  // Fila 0 (Arriba)
-      {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 1
-      {0x000000, 0x000000, 0x000000, 0x000000},  // Fila 2
-      {0x000000, 0x000000, 0x000002, 0x000000},  // Fila 3
-      {0x000000, 0x000000, 0x020000, 0x000000},  // Fila 4
-      {0x000002, 0x000000, 0x020000, 0x020000},  // Fila 5
-      {0x020000, 0x020000, 0x000002, 0x020000},  // Fila 6
-      {0x000002, 0x000002, 0x020000, 0x000002}   // Fila 7 (Abajo)
-  };
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -203,10 +193,11 @@ estado_siguiente = estado_inicio;
 	 //fin(mi_matriz, &htim4 );
 	//PruebaConLed();
 	  //ocupado=1;
-	 //buzzer(&htim3);
+	// buzzer(&htim3);
 	  HAL_Delay(1);
 
-	  actualizar_fsm_juego();
+	  //actualizar_fsm_juego();
+	  actualizar_fsm_juego_vs_bot();
 
     /* USER CODE END WHILE */
 

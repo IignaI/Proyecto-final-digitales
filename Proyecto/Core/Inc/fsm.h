@@ -9,6 +9,7 @@
 #define INC_FSM_H_
 
 void actualizar_fsm_juego(void);
+void actualizar_fsm_juego_vs_bot(void);
 void asignar_jugada(void);
 void comprobar_jugada(void);
 void siguiente_secuencia(void);
