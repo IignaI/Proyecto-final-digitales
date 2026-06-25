@@ -206,7 +206,8 @@ estado_siguiente = estado_inicio;
 	 //buzzer(&htim3);
 	  HAL_Delay(1);
 
-	  actualizar_fsm_juego();
+	  //actualizar_fsm_juego(); //JUEGO COMUN
+	  actualizar_fsm_juego_vs_bot(); //JUEGO CONTRA EL BOT
 
     /* USER CODE END WHILE */
 

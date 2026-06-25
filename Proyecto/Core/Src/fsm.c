@@ -55,6 +55,11 @@ volatile char jugador_f;
 volatile int dx;
 volatile int dy;
 
+volatile int x_bot;
+
+volatile int dificultad = 2;
+
+
 extern volatile int matriz[8][4];
 
 void actualizar_fsm_juego(void)
@@ -155,7 +160,97 @@ void actualizar_fsm_juego(void)
     }
 }
 
+void actualizar_fsm_juego_vs_bot(void)
+{
+    switch (estado_siguiente)
+    {
+    case estado_inicio:
+    	borrar();
+    	if (evento_actual == evento_presionar)
+    	{
+    		turno_anim(1);
+    		evento_actual = evento_soltar;
+    		estado_siguiente = estado_turno_A;
+    	}
+    	break;
+	case estado_turno_A:
+		if (evento_actual == evento_presionar)
+		{
+			printf("A\n");
+			jugador = 'A';
+			printf("jugador A\n");
+			asignar_jugada();
+			evento_actual = evento_soltar;
+			estado_siguiente = estado_comprobar_jugada;
 
+		}
+		break;
+	case estado_turno_B:
+		if (dificultad == 0)
+		{
+			jugada_de_bot_aleatoria();
+		}
+		else if (dificultad == 1)
+		{
+			jugada_de_bot_ganar();
+		}
+		else if (dificultad ==2)
+		{
+			jugada_de_bot_no_dejar_ganar();
+		}
+
+		//juega el bot, despues simula el presionar una boton
+		if (evento_actual == evento_presionar)
+		{
+			printf("B\n");
+			jugador = 'B';
+			asignar_jugada();
+			evento_actual = evento_soltar;
+			estado_siguiente = estado_comprobar_jugada;
+		}
+		break;
+	case estado_comprobar_jugada:
+		comprobar();
+
+		//decision de turnos
+		if (evento_actual == evento_gana_A)
+		{
+			gana(1);
+			estado_siguiente = estado_inicio;
+		}
+		else if(evento_actual == evento_gana_B)
+		{
+			gana(2);
+			estado_siguiente = estado_inicio;
+		}
+		else
+		{
+			if (jugador_f == 'A')
+			{
+				turno_anim(2);
+				jugador = 'B';
+				estado_siguiente = estado_turno_B;
+			}
+			else if (jugador_f == 'B')
+			{
+				turno_anim(1);
+				jugador = 'A';
+				estado_siguiente = estado_turno_A;
+			}
+			break;
+		}
+    }
+}
+
+void main_menu(void)
+{
+    switch (estado_siguiente)
+    {
+    case estado_inicio:
+    	break;
+
+    }
+}
 
 void asignar_jugada(void)
 {
@@ -479,5 +574,220 @@ void turno_anim(int jugador_n)
 
 }
 
+void jugada_de_bot_no_dejar_ganar(void)
+{
+	for (int y=0; y<=7; y++)
+	{
+		for (int x=0; x<=3; x++)
+		{
 
+			//ACA LAS JUGADAS GANADORAS
+						if (matriz[y][x]==1 && matriz[y][x+1]==2 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 | existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 | existe(x+2,y+1)==0))
+						{
+							x_bot=x+2;
+						}
+						else if (matriz[y][x]==2 && matriz[y][x-1]==1 && matriz[y][x-2]==0 && (matriz[y-1][x-2]!=0 | existe(x-2,y-1)==0) && (matriz[y+1][x-2]==0 | existe(x-2,y+1)==0))
+						{
+							x_bot=x-2;
+						}
+
+						else if  (matriz[y][x]==2 && matriz[y+1][x]==2 && matriz[y+2][x]==0 && existe(x,y+2)==1)
+						{
+							x_bot=x;
+						}
+
+						else if  (matriz[y][x]==2 && matriz[y+1][x+1]==2 && matriz[y+2][x+2]==0 && matriz[y+1][x+2]!=0 && (matriz[y+3][x+2]==0 | existe(x+2,y+3)==0))
+						{
+							x_bot=x+2;
+						}
+						else if  (matriz[y][x]==2 && matriz[y+1][x-1]==2 && matriz[y+2][x-2]==0 && matriz[y+1][x-2]!=0 && (matriz[y+3][x-2]==0 | existe(x-2,y+3)==0))
+						{
+							x_bot=x-2;
+						}
+						else if  (matriz[y][x]==2 && matriz[y-1][x+1]==2 && matriz[y-2][x+2]==0 && matriz[y-1][x+2]==0 && (existe(x+2,y-3)==0 | matriz[y-3][x+2]!=0))
+						{
+							x_bot=x+2;
+						}
+						else if  (matriz[y][x]==2 && matriz[y-1][x-1]==2 && matriz[y-2][x-2]==0 && matriz[y-1][x-2]==0 && (existe(x-2,y-3)==0 | matriz[y-3][x-2]!=0))
+						{
+							x_bot=x-2;
+						}
+
+						//Aca las jugadas semi-ganadoras
+						else if (matriz[y][x]==2 && matriz[y+1][x]==0 && existe(x,y+1)==1)
+						{
+							x_bot=x;
+						}
+						else if (matriz[y][x]==2 && matriz[y][x+1]==0 && matriz[y+1][x+1]==0 && existe(x+1,y)==1 && (matriz[y-1][x+1]!=0 | existe(x+1,y-1)==0))
+						{
+							x_bot=x+1;
+						}
+						else if (matriz[y][x]==2 && matriz[y][x-1]==0 && matriz[y+1][x-1]==0 && existe(x-1,y)==1 && (matriz[y-1][x-1]!=0 | existe(x-1,y-1)==0))
+						{
+							x_bot=x-1;
+						}
+
+						else if (matriz[y][x]==2 && matriz[y-1][x-1]==0 && matriz[y][x-1]==0 && (matriz[y-2][x-1]!=0 | existe(x-1,y-2)==0))
+						{
+							x_bot=x-1;
+						}
+						else if (matriz[y][x]==2 && matriz[y-1][x+1]==0 && matriz[y][x+1]==0 && (matriz[y-2][x+1]!=0 | existe(x+1,y-2)==0))
+						{
+							x_bot=x+1;
+						}
+
+						else if (matriz[y][x]==2 && matriz[y+1][x+1]==0 && matriz[y][x+1]!=0 && existe(x+1,y+1)==0)
+						{
+							x_bot=x+1;
+						}
+						else if (matriz[y][x]==2 && matriz[y+1][x-1]==0 && matriz[y][x-1]!=0 && existe(x-1,y+1)==0)
+						{
+							x_bot=x-1;
+						}
+			//Si no puede ganar entonces intenta bloquear...
+				else if (matriz[y][x]==1 && matriz[y][x+1]==1 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 | existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 | existe(x+2,y+1)==0))
+				{
+					x_bot=x+2;
+				}
+				else if (matriz[y][x]==1 && matriz[y][x-1]==1 && matriz[y][x-2]==0 && (matriz[y-1][x-2]!=0 | existe(x-2,y-1)==0) && (matriz[y+1][x-2]==0 | existe(x-2,y+1)==0))
+				{
+					x_bot=x-2;
+				}
+
+				else if  (matriz[y][x]==1 && matriz[y+1][x]==1 && matriz[y+2][x]==0 && existe(x,y+2)==1)
+				{
+					x_bot=x;
+				}
+
+				else if  (matriz[y][x]==1 && matriz[y+1][x+1]==1 && matriz[y+2][x+2]==0 && matriz[y+1][x+2]!=0 && (matriz[y+3][x+2]==0 | existe(x+2,y+3)==0))
+				{
+					x_bot=x+2;
+				}
+				else if  (matriz[y][x]==1 && matriz[y+1][x-1]==1 && matriz[y+2][x-2]==0 && matriz[y+1][x-2]!=0 && (matriz[y+3][x-2]==0 | existe(x-2,y+3)==0))
+				{
+					x_bot=x-2;
+				}
+
+
+				else if  (matriz[y][x]==1 && matriz[y-1][x+1]==1 && matriz[y-2][x+2]==0 && matriz[y-1][x+2]==0 && (existe(x+2,y-3)==0 | matriz[y-3][x+2]!=0))
+				{
+					x_bot=x+2;
+				}
+				else if  (matriz[y][x]==1 && matriz[y-1][x-1]==1 && matriz[y-2][x-2]==0 && matriz[y-1][x-2]==0 && (existe(x-2,y-3)==0 | matriz[y-3][x-2]!=0))
+				{
+					x_bot=x-2;
+				}
+				else
+				{
+					jugada_de_bot_aleatoria();
+				}
+		}
+	}
+	X=x_bot+1;
+	evento_actual = evento_presionar;
+}
+
+void jugada_de_bot_ganar(void)
+{
+	for (int y=0; y<=7; y++)
+	{
+		for (int x=0; x<=3; x++)
+		{
+			//ACA LAS JUGADAS GANADORAS EN CASO QUE EXISTAN DOS fichas posibles ganadoras
+			if (matriz[y][x]==1 && matriz[y][x+1]==2 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 | existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 | existe(x+2,y+1)==0))
+			{
+				x_bot=x+2;
+			}
+			else if (matriz[y][x]==2 && matriz[y][x-1]==1 && matriz[y][x-2]==0 && (matriz[y-1][x-2]!=0 | existe(x-2,y-1)==0) && (matriz[y+1][x-2]==0 | existe(x-2,y+1)==0))
+			{
+				x_bot=x-2;
+			}
+
+			else if  (matriz[y][x]==2 && matriz[y+1][x]==2 && matriz[y+2][x]==0 && existe(x,y+2)==1)
+			{
+				x_bot=x;
+			}
+
+			else if  (matriz[y][x]==2 && matriz[y+1][x+1]==2 && matriz[y+2][x+2]==0 && matriz[y+1][x+2]!=0 && (matriz[y+3][x+2]==0 | existe(x+2,y+3)==0))
+			{
+				x_bot=x+2;
+			}
+			else if  (matriz[y][x]==2 && matriz[y+1][x-1]==2 && matriz[y+2][x-2]==0 && matriz[y+1][x-2]!=0 && (matriz[y+3][x-2]==0 | existe(x-2,y+3)==0))
+			{
+				x_bot=x-2;
+			}
+			else if  (matriz[y][x]==2 && matriz[y-1][x+1]==2 && matriz[y-2][x+2]==0 && matriz[y-1][x+2]==0 && (existe(x+2,y-3)==0 | matriz[y-3][x+2]!=0))
+			{
+				x_bot=x+2;
+			}
+			else if  (matriz[y][x]==2 && matriz[y-1][x-1]==2 && matriz[y-2][x-2]==0 && matriz[y-1][x-2]==0 && (existe(x-2,y-3)==0 | matriz[y-3][x-2]!=0))
+			{
+				x_bot=x-2;
+			}
+
+			//DE ACA EN ADELANTE PONE CERCA DE UNA YA EXISTENTE
+			else if (matriz[y][x]==2 && matriz[y+1][x]==0 && existe(x,y+1)==1)
+			{
+				x_bot=x;
+			}
+			else if (matriz[y][x]==2 && matriz[y][x+1]==0 && matriz[y+1][x+1]==0 && existe(x+1,y)==1 && (matriz[y-1][x+1]!=0 | existe(x+1,y-1)==0))
+			{
+				x_bot=x+1;
+			}
+			else if (matriz[y][x]==2 && matriz[y][x-1]==0 && matriz[y+1][x-1]==0 && existe(x-1,y)==1 && (matriz[y-1][x-1]!=0 | existe(x-1,y-1)==0))
+			{
+				x_bot=x-1;
+			}
+
+			else if (matriz[y][x]==2 && matriz[y-1][x-1]==0 && matriz[y][x-1]==0 && (matriz[y-2][x-1]!=0 | existe(x-1,y-2)==0))
+			{
+				x_bot=x-1;
+			}
+			else if (matriz[y][x]==2 && matriz[y-1][x+1]==0 && matriz[y][x+1]==0 && (matriz[y-2][x+1]!=0 | existe(x+1,y-2)==0))
+			{
+				x_bot=x+1;
+			}
+
+			else if (matriz[y][x]==2 && matriz[y+1][x+1]==0 && matriz[y][x+1]!=0 && existe(x+1,y+1)==0)
+			{
+				x_bot=x+1;
+			}
+			else if (matriz[y][x]==2 && matriz[y+1][x-1]==0 && matriz[y][x-1]!=0 && existe(x-1,y+1)==0)
+			{
+				x_bot=x-1;
+			}
+
+			//SINO PONE UNA EN CUALQUIER LADO
+			else
+			{
+			jugada_de_bot_aleatoria();
+			}
+		}
+	}
+	X=x_bot+1;
+	evento_actual = evento_presionar;
+}
+
+void jugada_de_bot_aleatoria(void)
+{
+	x_bot = HAL_GetTick() % 3;
+	while (matriz[7][x_bot]!=0)	//se fija si alguna de las columnas no esta llena (no puede tirar sino)
+	{
+		x_bot = HAL_GetTick() % 3;
+	}
+	X=x_bot+1;
+	evento_actual = evento_presionar;
+}
+
+int existe(int x,int y)  //funcion auxiliar que determina si la posicion existe...
+{
+    if ( x<=3 && y<=7 && x>=0 && y>=0 )
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
