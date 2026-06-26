@@ -196,8 +196,8 @@ estado_siguiente = estado_inicio;
 	// buzzer(&htim3);
 	  HAL_Delay(1);
 
-	  actualizar_fsm_juego();
-	  //actualizar_fsm_juego_vs_bot();
+	  //actualizar_fsm_juego();
+	  actualizar_fsm_juego_vs_bot();
 
     /* USER CODE END WHILE */
 

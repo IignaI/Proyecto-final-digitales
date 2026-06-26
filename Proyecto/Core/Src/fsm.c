@@ -63,6 +63,19 @@ volatile int modobomba=0;
 
 extern volatile int matriz[8][4];
 
+int existe(int x,int y)  //funcion auxiliar que determina si la posicion existe...
+{
+    if ( x<=3 && y<=7 && x>=0 && y>=0 )
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+
 void main_menu(void)
 {
     switch (estado_siguiente)
@@ -84,11 +97,11 @@ void jugada_de_bot_no_dejar_ganar(void)
 		{
 
 			//ACA LAS JUGADAS GANADORAS
-						if (matriz[y][x]==1 && matriz[y][x+1]==2 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 | existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 | existe(x+2,y+1)==0))
+						if (matriz[y][x]==1 && matriz[y][x+1]==2 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 || existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 || existe(x+2,y+1)==0))
 						{
 							x_bot=x+2;
 						}
-						else if (matriz[y][x]==2 && matriz[y][x-1]==1 && matriz[y][x-2]==0 && (matriz[y-1][x-2]!=0 | existe(x-2,y-1)==0) && (matriz[y+1][x-2]==0 | existe(x-2,y+1)==0))
+						else if (matriz[y][x]==2 && matriz[y][x-1]==1 && matriz[y][x-2]==0 && (matriz[y-1][x-2]!=0 || existe(x-2,y-1)==0) && (matriz[y+1][x-2]==0 || existe(x-2,y+1)==0))
 						{
 							x_bot=x-2;
 						}
@@ -98,19 +111,19 @@ void jugada_de_bot_no_dejar_ganar(void)
 							x_bot=x;
 						}
 
-						else if  (matriz[y][x]==2 && matriz[y+1][x+1]==2 && matriz[y+2][x+2]==0 && matriz[y+1][x+2]!=0 && (matriz[y+3][x+2]==0 | existe(x+2,y+3)==0))
+						else if  (matriz[y][x]==2 && matriz[y+1][x+1]==2 && matriz[y+2][x+2]==0 && matriz[y+1][x+2]!=0 && (matriz[y+3][x+2]==0 || existe(x+2,y+3)==0))
 						{
 							x_bot=x+2;
 						}
-						else if  (matriz[y][x]==2 && matriz[y+1][x-1]==2 && matriz[y+2][x-2]==0 && matriz[y+1][x-2]!=0 && (matriz[y+3][x-2]==0 | existe(x-2,y+3)==0))
+						else if  (matriz[y][x]==2 && matriz[y+1][x-1]==2 && matriz[y+2][x-2]==0 && matriz[y+1][x-2]!=0 && (matriz[y+3][x-2]==0 || existe(x-2,y+3)==0))
 						{
 							x_bot=x-2;
 						}
-						else if  (matriz[y][x]==2 && matriz[y-1][x+1]==2 && matriz[y-2][x+2]==0 && matriz[y-1][x+2]==0 && (existe(x+2,y-3)==0 | matriz[y-3][x+2]!=0))
+						else if  (matriz[y][x]==2 && matriz[y-1][x+1]==2 && matriz[y-2][x+2]==0 && matriz[y-1][x+2]==0 && (existe(x+2,y-3)==0 || matriz[y-3][x+2]!=0))
 						{
 							x_bot=x+2;
 						}
-						else if  (matriz[y][x]==2 && matriz[y-1][x-1]==2 && matriz[y-2][x-2]==0 && matriz[y-1][x-2]==0 && (existe(x-2,y-3)==0 | matriz[y-3][x-2]!=0))
+						else if  (matriz[y][x]==2 && matriz[y-1][x-1]==2 && matriz[y-2][x-2]==0 && matriz[y-1][x-2]==0 && (existe(x-2,y-3)==0 || matriz[y-3][x-2]!=0))
 						{
 							x_bot=x-2;
 						}
@@ -120,20 +133,20 @@ void jugada_de_bot_no_dejar_ganar(void)
 						{
 							x_bot=x;
 						}
-						else if (matriz[y][x]==2 && matriz[y][x+1]==0 && matriz[y+1][x+1]==0 && existe(x+1,y)==1 && (matriz[y-1][x+1]!=0 | existe(x+1,y-1)==0))
+						else if (matriz[y][x]==2 && matriz[y][x+1]==0 && matriz[y+1][x+1]==0 && existe(x+1,y)==1 && (matriz[y-1][x+1]!=0 || existe(x+1,y-1)==0))
 						{
 							x_bot=x+1;
 						}
-						else if (matriz[y][x]==2 && matriz[y][x-1]==0 && matriz[y+1][x-1]==0 && existe(x-1,y)==1 && (matriz[y-1][x-1]!=0 | existe(x-1,y-1)==0))
+						else if (matriz[y][x]==2 && matriz[y][x-1]==0 && matriz[y+1][x-1]==0 && existe(x-1,y)==1 && (matriz[y-1][x-1]!=0 || existe(x-1,y-1)==0))
 						{
 							x_bot=x-1;
 						}
 
-						else if (matriz[y][x]==2 && matriz[y-1][x-1]==0 && matriz[y][x-1]==0 && (matriz[y-2][x-1]!=0 | existe(x-1,y-2)==0))
+						else if (matriz[y][x]==2 && matriz[y-1][x-1]==0 && matriz[y][x-1]==0 && (matriz[y-2][x-1]!=0 || existe(x-1,y-2)==0))
 						{
 							x_bot=x-1;
 						}
-						else if (matriz[y][x]==2 && matriz[y-1][x+1]==0 && matriz[y][x+1]==0 && (matriz[y-2][x+1]!=0 | existe(x+1,y-2)==0))
+						else if (matriz[y][x]==2 && matriz[y-1][x+1]==0 && matriz[y][x+1]==0 && (matriz[y-2][x+1]!=0 || existe(x+1,y-2)==0))
 						{
 							x_bot=x+1;
 						}
@@ -147,11 +160,11 @@ void jugada_de_bot_no_dejar_ganar(void)
 							x_bot=x-1;
 						}
 			//Si no puede ganar entonces intenta bloquear...
-				else if (matriz[y][x]==1 && matriz[y][x+1]==1 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 | existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 | existe(x+2,y+1)==0))
+				else if (matriz[y][x]==1 && matriz[y][x+1]==1 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 || existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 || existe(x+2,y+1)==0))
 				{
 					x_bot=x+2;
 				}
-				else if (matriz[y][x]==1 && matriz[y][x-1]==1 && matriz[y][x-2]==0 && (matriz[y-1][x-2]!=0 | existe(x-2,y-1)==0) && (matriz[y+1][x-2]==0 | existe(x-2,y+1)==0))
+				else if (matriz[y][x]==1 && matriz[y][x-1]==1 && matriz[y][x-2]==0 && (matriz[y-1][x-2]!=0 || existe(x-2,y-1)==0) && (matriz[y+1][x-2]==0 || existe(x-2,y+1)==0))
 				{
 					x_bot=x-2;
 				}
@@ -161,21 +174,21 @@ void jugada_de_bot_no_dejar_ganar(void)
 					x_bot=x;
 				}
 
-				else if  (matriz[y][x]==1 && matriz[y+1][x+1]==1 && matriz[y+2][x+2]==0 && matriz[y+1][x+2]!=0 && (matriz[y+3][x+2]==0 | existe(x+2,y+3)==0))
+				else if  (matriz[y][x]==1 && matriz[y+1][x+1]==1 && matriz[y+2][x+2]==0 && matriz[y+1][x+2]!=0 && (matriz[y+3][x+2]==0 || existe(x+2,y+3)==0))
 				{
 					x_bot=x+2;
 				}
-				else if  (matriz[y][x]==1 && matriz[y+1][x-1]==1 && matriz[y+2][x-2]==0 && matriz[y+1][x-2]!=0 && (matriz[y+3][x-2]==0 | existe(x-2,y+3)==0))
+				else if  (matriz[y][x]==1 && matriz[y+1][x-1]==1 && matriz[y+2][x-2]==0 && matriz[y+1][x-2]!=0 && (matriz[y+3][x-2]==0 || existe(x-2,y+3)==0))
 				{
 					x_bot=x-2;
 				}
 
 
-				else if  (matriz[y][x]==1 && matriz[y-1][x+1]==1 && matriz[y-2][x+2]==0 && matriz[y-1][x+2]==0 && (existe(x+2,y-3)==0 | matriz[y-3][x+2]!=0))
+				else if  (matriz[y][x]==1 && matriz[y-1][x+1]==1 && matriz[y-2][x+2]==0 && matriz[y-1][x+2]==0 && (existe(x+2,y-3)==0 || matriz[y-3][x+2]!=0))
 				{
 					x_bot=x+2;
 				}
-				else if  (matriz[y][x]==1 && matriz[y-1][x-1]==1 && matriz[y-2][x-2]==0 && matriz[y-1][x-2]==0 && (existe(x-2,y-3)==0 | matriz[y-3][x-2]!=0))
+				else if  (matriz[y][x]==1 && matriz[y-1][x-1]==1 && matriz[y-2][x-2]==0 && matriz[y-1][x-2]==0 && (existe(x-2,y-3)==0 || matriz[y-3][x-2]!=0))
 				{
 					x_bot=x-2;
 				}
@@ -196,11 +209,11 @@ void jugada_de_bot_ganar(void)
 		for (int x=0; x<=3; x++)
 		{
 			//ACA LAS JUGADAS GANADORAS EN CASO QUE EXISTAN DOS fichas posibles ganadoras
-			if (matriz[y][x]==1 && matriz[y][x+1]==2 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 | existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 | existe(x+2,y+1)==0))
+			if (matriz[y][x]==1 && matriz[y][x+1]==2 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 || existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 || existe(x+2,y+1)==0))
 			{
 				x_bot=x+2;
 			}
-			else if (matriz[y][x]==2 && matriz[y][x-1]==1 && matriz[y][x-2]==0 && (matriz[y-1][x-2]!=0 | existe(x-2,y-1)==0) && (matriz[y+1][x-2]==0 | existe(x-2,y+1)==0))
+			else if (matriz[y][x]==2 && matriz[y][x-1]==1 && matriz[y][x-2]==0 && (matriz[y-1][x-2]!=0 || existe(x-2,y-1)==0) && (matriz[y+1][x-2]==0 || existe(x-2,y+1)==0))
 			{
 				x_bot=x-2;
 			}
@@ -210,19 +223,19 @@ void jugada_de_bot_ganar(void)
 				x_bot=x;
 			}
 
-			else if  (matriz[y][x]==2 && matriz[y+1][x+1]==2 && matriz[y+2][x+2]==0 && matriz[y+1][x+2]!=0 && (matriz[y+3][x+2]==0 | existe(x+2,y+3)==0))
+			else if  (matriz[y][x]==2 && matriz[y+1][x+1]==2 && matriz[y+2][x+2]==0 && matriz[y+1][x+2]!=0 && (matriz[y+3][x+2]==0 || existe(x+2,y+3)==0))
 			{
 				x_bot=x+2;
 			}
-			else if  (matriz[y][x]==2 && matriz[y+1][x-1]==2 && matriz[y+2][x-2]==0 && matriz[y+1][x-2]!=0 && (matriz[y+3][x-2]==0 | existe(x-2,y+3)==0))
+			else if  (matriz[y][x]==2 && matriz[y+1][x-1]==2 && matriz[y+2][x-2]==0 && matriz[y+1][x-2]!=0 && (matriz[y+3][x-2]==0 || existe(x-2,y+3)==0))
 			{
 				x_bot=x-2;
 			}
-			else if  (matriz[y][x]==2 && matriz[y-1][x+1]==2 && matriz[y-2][x+2]==0 && matriz[y-1][x+2]==0 && (existe(x+2,y-3)==0 | matriz[y-3][x+2]!=0))
+			else if  (matriz[y][x]==2 && matriz[y-1][x+1]==2 && matriz[y-2][x+2]==0 && matriz[y-1][x+2]==0 && (existe(x+2,y-3)==0 || matriz[y-3][x+2]!=0))
 			{
 				x_bot=x+2;
 			}
-			else if  (matriz[y][x]==2 && matriz[y-1][x-1]==2 && matriz[y-2][x-2]==0 && matriz[y-1][x-2]==0 && (existe(x-2,y-3)==0 | matriz[y-3][x-2]!=0))
+			else if  (matriz[y][x]==2 && matriz[y-1][x-1]==2 && matriz[y-2][x-2]==0 && matriz[y-1][x-2]==0 && (existe(x-2,y-3)==0 || matriz[y-3][x-2]!=0))
 			{
 				x_bot=x-2;
 			}
@@ -232,20 +245,20 @@ void jugada_de_bot_ganar(void)
 			{
 				x_bot=x;
 			}
-			else if (matriz[y][x]==2 && matriz[y][x+1]==0 && matriz[y+1][x+1]==0 && existe(x+1,y)==1 && (matriz[y-1][x+1]!=0 | existe(x+1,y-1)==0))
+			else if (matriz[y][x]==2 && matriz[y][x+1]==0 && matriz[y+1][x+1]==0 && existe(x+1,y)==1 && (matriz[y-1][x+1]!=0 || existe(x+1,y-1)==0))
 			{
 				x_bot=x+1;
 			}
-			else if (matriz[y][x]==2 && matriz[y][x-1]==0 && matriz[y+1][x-1]==0 && existe(x-1,y)==1 && (matriz[y-1][x-1]!=0 | existe(x-1,y-1)==0))
+			else if (matriz[y][x]==2 && matriz[y][x-1]==0 && matriz[y+1][x-1]==0 && existe(x-1,y)==1 && (matriz[y-1][x-1]!=0 || existe(x-1,y-1)==0))
 			{
 				x_bot=x-1;
 			}
 
-			else if (matriz[y][x]==2 && matriz[y-1][x-1]==0 && matriz[y][x-1]==0 && (matriz[y-2][x-1]!=0 | existe(x-1,y-2)==0))
+			else if (matriz[y][x]==2 && matriz[y-1][x-1]==0 && matriz[y][x-1]==0 && (matriz[y-2][x-1]!=0 || existe(x-1,y-2)==0))
 			{
 				x_bot=x-1;
 			}
-			else if (matriz[y][x]==2 && matriz[y-1][x+1]==0 && matriz[y][x+1]==0 && (matriz[y-2][x+1]!=0 | existe(x+1,y-2)==0))
+			else if (matriz[y][x]==2 && matriz[y-1][x+1]==0 && matriz[y][x+1]==0 && (matriz[y-2][x+1]!=0 || existe(x+1,y-2)==0))
 			{
 				x_bot=x+1;
 			}
@@ -314,7 +327,6 @@ void animacion_caida_bomba(void)
 	}
 	HAL_Delay(106-k*15);	//simula el efecto de gravedad si la dv/dt=-cte
 	}
-	printf("fin de animacion\n");
 
 }
 
@@ -339,7 +351,6 @@ void bomba(void)
 		{
 			matriz[Yf+1][Xf]=9;
 		}
-		printf("PLOFWM!!!!\n");
 		imprimir_matriz_actual();
 		HAL_Delay(100);
 		matriz[Yf][Xf]=9;
@@ -359,7 +370,6 @@ void bomba(void)
 		{
 			matriz[Yf+1][Xf]=0;
 		}
-		printf("PLOFWM!!!!\n");
 		imprimir_matriz_actual();
 		HAL_Delay(100);
 		matriz[Yf][Xf]=9;
@@ -379,7 +389,6 @@ void bomba(void)
 		{
 			matriz[Yf+1][Xf]=9;
 		}
-		printf("PLOFWM!!!!\n");
 		imprimir_matriz_actual();
 		HAL_Delay(100);
 		animacion_caida_bomba();
@@ -422,9 +431,7 @@ void actualizar_fsm_juego(void)
 	case estado_turno_A:
 		if (evento_actual == evento_presionar)
 		{
-			printf("A\n");
 			jugador = 'A';
-			printf("jugador A\n");
 			asignar_jugada();
 			evento_actual = evento_soltar;
 			estado_siguiente = estado_comprobar_jugada;
@@ -434,7 +441,6 @@ void actualizar_fsm_juego(void)
 	case estado_turno_B:
 		if (evento_actual == evento_presionar)
 		{
-			printf("B\n");
 			jugador = 'B';
 			asignar_jugada();
 			evento_actual = evento_soltar;
@@ -549,22 +555,15 @@ void asignar_jugada(void)
 		}
 		Xf = X_;
 		Yf = j;
-		printf("(Xf,Yf)=(");
-		printf("%d",Xf+1);
-		printf(",");
-		printf("%d",Yf+1);
-		printf(")\n");
 		HAL_Delay(500);	//para ver el mensaje
 
 	}
 	else if (jugador == 'B' && matriz[j][X_] != 0)
 	{
-		printf("Error: Jugada invalida de B \n");
 		evento_actual = evento_jugada_invalida_de_B;
 	}
 	else if (jugador == 'A' && matriz[j][X_] != 0)
 	{
-		printf("Error: Jugada invalida de A \n");
 		evento_actual = evento_jugada_invalida_de_A;
 	}
 
@@ -730,9 +729,7 @@ void actualizar_fsm_juego_vs_bot(void)
 	case estado_turno_A:
 		if (evento_actual == evento_presionar)
 		{
-			printf("A\n");
 			jugador = 'A';
-			printf("jugador A\n");
 			asignar_jugada();
 			evento_actual = evento_soltar;
 			estado_siguiente = estado_comprobar_jugada;
@@ -756,7 +753,6 @@ void actualizar_fsm_juego_vs_bot(void)
 		//juega el bot, despues simula el presionar una boton
 		if (evento_actual == evento_presionar)
 		{
-			printf("B\n");
 			jugador = 'B';
 			asignar_jugada();
 			evento_actual = evento_soltar;
@@ -796,16 +792,5 @@ void actualizar_fsm_juego_vs_bot(void)
     }
 }
 
-int existe(int x,int y)  //funcion auxiliar que determina si la posicion existe...
-{
-    if ( x<=3 && y<=7 && x>=0 && y>=0 )
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
 
 
