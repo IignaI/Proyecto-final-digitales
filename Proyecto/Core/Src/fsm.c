@@ -358,72 +358,79 @@ void asignar_jugada(void)
 }
 void comprobar(void)
 {
-		int jugador_n;
-		int dy1[8] = {0,0,1,-1,1,-1,1,-1};
-		int dy2[8] = {0,0,2,-2,2,-2,2,-2};
-		int dy3[8] = {0,0,-1,1,-1,1,-1,1};
-		int dx1[8] = {1,-1,0,0,1,-1,-1,1};
-		int dx2[8] = {2,-2,0,0,2,-2,-2,2};
-		int dx3[8] = {-1,1,0,0,-1,1,1,-1};
+	int jugador_n = 0;
+	int dy1[8] = {0,0,1,-1,1,-1,1,-1};
+	int dy2[8] = {0,0,2,-2,2,-2,2,-2};
+	int dy3[8] = {0,0,-1,1,-1,1,-1,1};
+	int dx1[8] = {1,-1,0,0,1,-1,-1,1};
+	int dx2[8] = {2,-2,0,0,2,-2,-2,2};
+	int dx3[8] = {-1,1,0,0,-1,1,1,-1};
 
-		int ganar;
-		int i;
+	int ganar = 0;
+	int i = 0;
 
-		ganar = 0;
+	// Convierte jugador (char) a jugador_n (int)
+	if (jugador == 'A')
+	{
+		jugador_n = 1;
+	}
+	else if (jugador == 'B')
+	{
+		jugador_n = 2;
+	}
+	else
+	{
+		return; // Si es la bomba ('K') u otro estado, no comprobamos victoria tradicional
+	}
 
-		i = 0;
+	while (ganar == 0 && i <= 7)
+	{
+		// 1. Calculamos las posiciones deseadas para este vector
+		int y1 = Yf + dy1[i]; int x1 = Xf + dx1[i];
+		int y2 = Yf + dy2[i]; int x2 = Xf + dx2[i];
+		int y3 = Yf + dy3[i]; int x3 = Xf + dx3[i];
 
-		if (jugador == 'A')		//esta seccion covierte jugador(char) a jugador_n(int)
+		// 2. Evaluamos la primera dirección (Ficha adyacente)
+		// PRIMERO validamos que las coordenadas estén dentro de la matriz de 8x4
+		if (y1 >= 0 && y1 <= 7 && x1 >= 0 && x1 <= 3)
 		{
-			jugador_n = 1;
-		}
-		else if (jugador == 'B')
-		{
-			jugador_n = 2;
-		}
-
-		while (ganar == 0 && i<=7)
-		{
-			if (matriz[Yf+dy1[i]][Xf+dx1[i]]==jugador_n && Yf+dy1[i]<=7 && Yf+dy1[i]>=0 && Xf+dx1[i]<=3 && Yf+dx1[i]>=0)
+			if (matriz[y1][x1] == jugador_n)
 			{
-				if (matriz[Yf+dy2[i]][Xf+dx2[i]]==jugador_n && Yf+dy2[i]<=7 && Yf+dy2[i]>=0 && Xf+dx2[i]<=3 && Yf+dx2[i]>=0)
+				// Caso A: Revisar si la línea se extiende en la misma dirección (Ficha 1 + Ficha 2)
+				if (y2 >= 0 && y2 <= 7 && x2 >= 0 && x2 <= 3)
 				{
-					win_x1 = Xf;          win_y1 = Yf;
-					win_x2 = Xf + dx1[i]; win_y2 = Yf + dy1[i];
-					win_x3 = Xf + dx2[i]; win_y3 = Yf + dy2[i];
-					if (jugador_n==1)
+					if (matriz[y2][x2] == jugador_n)
 					{
-						printf("Win A\n");
-						evento_actual = evento_gana_A;
-					}
-					else
-					{
-						printf("Win B\n");
-						evento_actual = evento_gana_B;
+						win_x1 = Xf; win_y1 = Yf;
+						win_x2 = x1; win_y2 = y1;
+						win_x3 = x2; win_y3 = y2;
+						ganar = 1; // Detiene el bucle while
+
+						if (jugador_n == 1) evento_actual = evento_gana_A;
+						else                evento_actual = evento_gana_B;
 					}
 				}
-				else if (matriz[Yf+dy3[i]][Xf+dx3[i]]==jugador_n && Yf+dy3[i]<=7 && Yf+dy3[i]>=0 && Xf+dx3[i]<=3 && Yf+dx3[i]>=0)
+
+				// Caso B: Revisar si la ficha actual quedó en el MEDIO (Ficha 1 + Ficha 3 trasera)
+				if (ganar == 0 && y3 >= 0 && y3 <= 7 && x3 >= 0 && x3 <= 3)
 				{
-					win_x1 = Xf;          win_y1 = Yf;
-                	win_x2 = Xf + dx1[i]; win_y2 = Yf + dy1[i];
-                	win_x3 = Xf + dx3[i]; win_y3 = Yf + dy3[i];
-					if (jugador_n==1)
+					if (matriz[y3][x3] == jugador_n)
 					{
-						printf("Win A\n");
-						evento_actual = evento_gana_A;
-					}
-					else
-					{
-						printf("Win B\n");
-						evento_actual = evento_gana_B;
+						win_x1 = Xf; win_y1 = Yf;
+						win_x2 = x1; win_y2 = y1;
+						win_x3 = x3; win_y3 = y3;
+						ganar = 1; // Detiene el bucle while
+
+						if (jugador_n == 1) evento_actual = evento_gana_A;
+						else                evento_actual = evento_gana_B;
 					}
 				}
 			}
-			i=i+1;
 		}
+		i++;
+	}
 
-		//seccion jugada bomba
-
+	// Aquí abajo puedes continuar con tu sección de la jugada bomba
 }
 
 
