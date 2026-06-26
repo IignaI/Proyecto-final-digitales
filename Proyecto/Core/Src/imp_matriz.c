@@ -57,6 +57,6 @@ void imprimir_matriz_actual(void)
 			}
 		}
 
-	escribir(mi_matriz,&htim4);
+	//escribir(mi_matriz,&htim4);
 
 }

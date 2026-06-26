@@ -7,7 +7,7 @@
 #include "stm32f4xx_hal.h"
 #include "fsm.h"
 #include "stdio.h"
-#include "imp_matriz.h"
+#include "luces.h"
 
 typedef enum{
     estado_inicio,
@@ -23,7 +23,8 @@ typedef enum{
     estado_fin_del_juego,
 	estado_asignar_turno,
 	estado_menu,
-	estado_bomba
+	estado_bomba,
+	estado_prepartida
 }estado;
 
 typedef enum{
@@ -47,6 +48,7 @@ extern char jugador;
 extern int X;
 extern int Y;
 extern int bloqueo;
+extern TIM_HandleTypeDef htim4;
 
 volatile int x_bot;
 volatile int dificultad = 2;
@@ -61,7 +63,8 @@ volatile int win_x1, win_x2, win_x3;
 volatile int win_y1, win_y2, win_y3;
 volatile int modobomba=0;
 
-extern volatile int matriz[8][4];
+extern int matriz[8][4];
+extern int ocupado;
 
 int existe(int x,int y)  //funcion auxiliar que determina si la posicion existe...
 {
@@ -75,18 +78,23 @@ int existe(int x,int y)  //funcion auxiliar que determina si la posicion existe.
     }
 }
 
-
 void main_menu(void)
 {
-    switch (estado_siguiente)
-    {
-    default:
-            // "Todas las demás opciones que no me importan entran aquí"
-            break; // No hace nada y sale del switch de forma segura
-    case estado_inicio:
-    	break;
+	static uint32_t tiempo_anterior_menu = 0;
+	  if (HAL_GetTick() - tiempo_anterior_menu >= 300) {
+	        tiempo_anterior_menu = HAL_GetTick();
+	for (int j=0; j<=7; j++)
+	{
 
-    }
+		for (int i=0; i<=3; i++)
+		{
+				matriz[j][i] = 2;
+		}
+
+	}
+	escribir(matriz,&htim4);
+	  }
+
 }
 
 void jugada_de_bot_no_dejar_ganar(void)
@@ -296,6 +304,9 @@ void jugada_de_bot_aleatoria(void)
 
 void animacion_caida_bomba(void)
 {
+	static uint32_t tiempo_anterior_cb = 0;
+	if (HAL_GetTick() - tiempo_anterior_cb >= 300) {
+		        tiempo_anterior_cb = HAL_GetTick();
 	for (int i=0; i<=7; i++)
 	{
 		for (int j=0; j<=7; j++)
@@ -322,16 +333,18 @@ void animacion_caida_bomba(void)
 				matriz[j+1][i] = 0;
 			}
 		}
-		imprimir_matriz_actual();	//en este caso se imprime para mostrar la animacion
+		escribir(matriz,&htim4);	//en este caso se imprime para mostrar la animacion
 
 	}
-	HAL_Delay(106-k*15);	//simula el efecto de gravedad si la dv/dt=-cte
 	}
-
+	}
 }
 
 void bomba(void)
 {
+	static uint32_t tiempo_anterior_b = 0;
+	if (HAL_GetTick() - tiempo_anterior_b >= 300) {
+		        tiempo_anterior_b = HAL_GetTick();
 	if (jugador == 'K')
 	{
 		matriz[Yf][Xf]=9;
@@ -351,7 +364,7 @@ void bomba(void)
 		{
 			matriz[Yf+1][Xf]=9;
 		}
-		imprimir_matriz_actual();
+		escribir(matriz,&htim4);
 		HAL_Delay(100);
 		matriz[Yf][Xf]=9;
 		if (Yf<=7 && Yf>=0 && Xf+1<=3 && Xf+1>=0)
@@ -370,7 +383,7 @@ void bomba(void)
 		{
 			matriz[Yf+1][Xf]=0;
 		}
-		imprimir_matriz_actual();
+		escribir(matriz,&htim4);
 		HAL_Delay(100);
 		matriz[Yf][Xf]=9;
 		if (Yf<=7 && Yf>=0 && Xf+1<=3 && Xf+1>=0)
@@ -389,12 +402,12 @@ void bomba(void)
 		{
 			matriz[Yf+1][Xf]=9;
 		}
-		imprimir_matriz_actual();
+		escribir(matriz,&htim4);
 		HAL_Delay(100);
 		animacion_caida_bomba();
 	}
 }
-
+}
 void borrar(void)
 {
 	for (int j=0; j<=7; j++)
@@ -406,7 +419,7 @@ void borrar(void)
 		}
 
 	}
-	imprimir_matriz_actual();
+	escribir(matriz,&htim4);
 
 }
 
@@ -419,14 +432,24 @@ void actualizar_fsm_juego(void)
             break; // No hace nada y sale del switch de forma segura
     case estado_inicio:
     	main_menu();
-    	borrar();
     	if (evento_actual == evento_presionar)
     	{
 
-    		turno_anim(1);
+
     		evento_actual = evento_soltar;
-    		estado_siguiente = estado_turno_A;
+    		estado_siguiente = estado_prepartida;
     	}
+    	break;
+    case estado_prepartida:
+    	fin(matriz, &htim4 );
+
+    	if (ocupado == 1)
+    	{
+
+    		estado_siguiente = estado_prepartida;
+    	}else{    	estado_siguiente = estado_turno_A;
+		turno_anim(1);}
+
     	break;
 	case estado_turno_A:
 		if (evento_actual == evento_presionar)
@@ -435,6 +458,9 @@ void actualizar_fsm_juego(void)
 			asignar_jugada();
 			evento_actual = evento_soltar;
 			estado_siguiente = estado_comprobar_jugada;
+
+
+
 
 		}
 		break;
@@ -468,13 +494,26 @@ void actualizar_fsm_juego(void)
 
 		if (evento_actual == evento_gana_A)
 		{
-			gana(1);
-			estado_siguiente = estado_inicio;
+			animacion_victoria(matriz, win_y1, win_x1, win_y2, win_x2, win_y3, win_x3, &htim4);
+			fin(matriz, &htim4 );
+
+			    	if (ocupado == 1)
+			    	{
+
+			    		estado_siguiente = estado_comprobar_jugada;
+			    	}else{    	estado_siguiente = estado_inicio;}
+
 		}
 		else if(evento_actual == evento_gana_B)
 		{
-			gana(2);
-			estado_siguiente = estado_inicio;
+			animacion_victoria(matriz, win_y1, win_x1, win_y2, win_x2, win_y3, win_x3, &htim4);
+			fin(matriz, &htim4 );
+
+						    	if (ocupado == 1)
+						    	{
+
+						    		estado_siguiente = estado_comprobar_jugada;
+						    	}else{    	estado_siguiente = estado_inicio;}
 		}
 		else if (last_digit == 1 || last_digit == 3)
 		{
@@ -505,7 +544,7 @@ void actualizar_fsm_juego(void)
 
 void asignar_jugada(void)
 {
-	bloqueo = 1;
+	//bloqueo = 1;
 	//int Y_ = Y-1;
 	int X_ = X-1;
 
@@ -525,7 +564,7 @@ void asignar_jugada(void)
 		{
 			matriz[j][X_] = 5;
 		}
-		imprimir_matriz_actual();	//en este caso se imprime para mostrar la animacion
+		escribir(matriz,&htim4);	//en este caso se imprime para mostrar la animacion
 
 
 		int k;	//gravedad
@@ -549,13 +588,12 @@ void asignar_jugada(void)
 				matriz[j][X_] = 5;
 				// si esto fuese asi:jugador_f = 'K', no funcionaria la jugada bomba con turnos correctamente;
 			}
-			imprimir_matriz_actual();	//en este caso se imprime para mostrar la animacion
+			escribir(matriz,&htim4);	//en este caso se imprime para mostrar la animacion
 			HAL_Delay(106/2-k*6);	//gravedad
 			k=k-1;	//gravedad
 		}
 		Xf = X_;
 		Yf = j;
-		HAL_Delay(500);	//para ver el mensaje
 
 	}
 	else if (jugador == 'B' && matriz[j][X_] != 0)
@@ -652,16 +690,8 @@ void comprobar(void)
 
 void gana(int jugador_n)
 {
-	for (int j=0; j<=7; j++)
-	{
 
-		for (int i=0; i<=3; i++)
-		{
-				matriz[j][i] = jugador_n;
-		}
-
-	}
-	imprimir_matriz_actual();
+	fin(matriz, &htim4 );
 
 }
 
@@ -694,7 +724,7 @@ void turno_anim(int jugador_n)
 				}
 			}
 		}
-	imprimir_matriz_actual();
+	escribir(matriz,&htim4);
 	HAL_Delay(200);
 	borrar();
 
@@ -705,7 +735,7 @@ void turno_anim(int jugador_n)
 				matriz[j][i]=matriz_aux[j][i];
 			}
 		}
-	imprimir_matriz_actual();
+	escribir(matriz,&htim4);
 
 
 }

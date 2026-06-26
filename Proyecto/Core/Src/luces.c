@@ -73,13 +73,41 @@ void mapeo(uint32_t matriz[FILAS][COLUMNAS], uint32_t tablero[NUM_LEDS]){
 		  }
 }
 
-void escribir(uint32_t matriz[FILAS][COLUMNAS], TIM_HandleTypeDef *htim) {
+void escribir(int matriz[FILAS][COLUMNAS], TIM_HandleTypeDef *htim) {
+	static uint32_t mi_matriz[8][4];
+	for (int j = 0; j <= 7; j++)
+			{
+				for (int i = 0; i <= 3; i++)
+				{
+						//para invertir el display j=7-1
+					if (matriz[j][i]==1)
+					{
+						mi_matriz[7-j][i]=0x000002;
+					}
+					else if (matriz[j][i]==2)
+					{
+						mi_matriz[7-j][i]=0x020000;
+					}
+					else if (matriz[j][i]==5)
+					{
+						mi_matriz[7-j][i]=0x000200;
+					}
+					else if (matriz[j][i]==9)
+					{
+						mi_matriz[7-j][i]=0x020202;
+					}
+					else
+					{
+						mi_matriz[7-j][i]=0x000000;
+					}
+				}
+			}
 
-    mapeo(matriz, tablero_interno);
+    mapeo(mi_matriz, tablero_interno);
     actualizar_matriz(htim, tablero_interno);
 }
 
-void caer_en_columna(uint32_t matriz[FILAS][COLUMNAS], int columna_elegida, uint32_t color, TIM_HandleTypeDef *htim) {
+void caer_en_columna(int matriz[FILAS][COLUMNAS], int columna_elegida, uint32_t color, TIM_HandleTypeDef *htim) {
 
     // VARIABLES ESTÁTICAS (Mantienen su memoria interna entre llamadas)
     static int i = 0;
@@ -142,7 +170,7 @@ void caer_en_columna(uint32_t matriz[FILAS][COLUMNAS], int columna_elegida, uint
     }
 }
 
-void animacion_victoria(uint32_t matriz[FILAS][COLUMNAS], int f1, int c1, int f2, int c2, int f3, int c3, TIM_HandleTypeDef *htim) {
+void animacion_victoria(int matriz[FILAS][COLUMNAS], int f1, int c1, int f2, int c2, int f3, int c3, TIM_HandleTypeDef *htim) {
 
     // variables para control de tiempo y parpadeo
     static uint32_t tiempo_anterior_vic = 0;
@@ -164,9 +192,9 @@ void animacion_victoria(uint32_t matriz[FILAS][COLUMNAS], int f1, int c1, int f2
         tiempo_anterior_vic = HAL_GetTick();
 
         //apago posicion ganadora
-        matriz[f1][c1] = 0x00000000;
-        matriz[f2][c2] = 0x00000000;
-        matriz[f3][c3] = 0x00000000;
+        matriz[f1][c1] = 0;
+        matriz[f2][c2] = 0;
+        matriz[f3][c3] = 0;
 
         estado_luces = 1;
         ciclos = 1;
@@ -175,7 +203,7 @@ void animacion_victoria(uint32_t matriz[FILAS][COLUMNAS], int f1, int c1, int f2
     }
 
     // condicion final
-    if (ciclos >= 21) {
+    if (ciclos >=10) {
         matriz[f1][c1] = col;
         matriz[f2][c2] = col;
         matriz[f3][c3] = col;
@@ -194,9 +222,9 @@ void animacion_victoria(uint32_t matriz[FILAS][COLUMNAS], int f1, int c1, int f2
         tiempo_anterior_vic = HAL_GetTick();
         // apago leds
         if (estado_luces == 0) {
-            matriz[f1][c1] = 0x00000000;
-            matriz[f2][c2] = 0x00000000;
-            matriz[f3][c3] = 0x00000000;
+            matriz[f1][c1] = 0;
+            matriz[f2][c2] = 0;
+            matriz[f3][c3] = 0;
 
             estado_luces = 1;
             ciclos++;
@@ -215,7 +243,7 @@ void animacion_victoria(uint32_t matriz[FILAS][COLUMNAS], int f1, int c1, int f2
     }
 }
 
-void fin(uint32_t matriz[FILAS][COLUMNAS], TIM_HandleTypeDef *htim) {
+void fin(int matriz[FILAS][COLUMNAS], TIM_HandleTypeDef *htim) {
 
     static uint32_t tiempo_anterior_caida = 0;
     static int desplazamientos_hechos = 0;
@@ -243,16 +271,16 @@ void fin(uint32_t matriz[FILAS][COLUMNAS], TIM_HandleTypeDef *htim) {
     if (HAL_GetTick() - tiempo_anterior_caida >= VELOCIDAD_CAIDA) {
         tiempo_anterior_caida = HAL_GetTick();
 
-        // logica de desplazamnmiento (guarda en la fila lo que hay en la fila anterior )
-        for (int i = 7; i > 0; i--) {
+        // Lógica de desplazamiento invertida (copia la fila siguiente en la actual)
+        for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 4; j++) {
-                matriz[i][j] = matriz[i - 1][j];
+                matriz[i][j] = matriz[i + 1][j]; // Trae lo de la fila de más adelante
             }
         }
 
-        // Limpiar la fila 0 (para que el valor no baje repitiendose)
+        // Limpiar la última fila (la 7) para que quede libre al desplazarse
         for (int j = 0; j < 4; j++) {
-            matriz[0][j] = 0;
+            matriz[7][j] = 0;
         }
 
         escribir(matriz, htim);

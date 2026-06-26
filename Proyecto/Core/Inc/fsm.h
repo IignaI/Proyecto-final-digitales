@@ -20,5 +20,6 @@ void comprobar(void);
 void borrarSW(void);
 void turno_anim(int jugador_n);
 void gana(int jugador_n);
+void main_menu(void);
 
 #endif /* INC_FSM_H_ */
