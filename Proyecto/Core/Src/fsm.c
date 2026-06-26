@@ -734,7 +734,7 @@ void comprobar(void)
 	else if (jugador == 'B')
 	{
 		jugador_n = 2;
-	}
+	}else{return;}
 	while (ganar == 0 && i <= 7)
 	{
 		// 1. Calculamos las posiciones deseadas para este vector
