@@ -61,10 +61,30 @@ volatile int dx;
 volatile int dy;
 volatile int win_x1, win_x2, win_x3;
 volatile int win_y1, win_y2, win_y3;
-volatile int modobomba=0;
+volatile int modobomba=1;
 
 extern int matriz[8][4];
 extern int ocupado;
+int matrizj[8][4] = {
+     			{0, 1, 1, 0},
+     			{0, 0, 1, 0},
+     			{0, 0, 1, 0},
+     			{0, 1, 1, 1},
+     			{0, 2, 2, 0},
+     			{0, 0, 2, 0},
+     			{0, 0, 2, 0},
+     			{0, 2, 2, 2}
+     		};
+int matrizb[8][4] = {
+     			{0, 1, 1, 0},
+     			{5, 0, 1, 0},
+     			{0, 0, 1, 0},
+     			{0, 1, 1, 1},
+     			{0, 2, 2, 0},
+     			{5, 0, 2, 0},
+     			{0, 0, 2, 0},
+     			{0, 2, 2, 2}
+     		};
 
 int existe(int x,int y)  //funcion auxiliar que determina si la posicion existe...
 {
@@ -83,14 +103,23 @@ void main_menu(void)
 	static uint32_t tiempo_anterior_menu = 0;
 	  if (HAL_GetTick() - tiempo_anterior_menu >= 300) {
 	        tiempo_anterior_menu = HAL_GetTick();
+	        if (modobomba == 1 ){
+	        	for (int j=0; j<=7; j++)
+	        		{
+	        			for (int i=0; i<=3; i++)
+	        			{
+	        					matriz[j][i] = matrizb[j][i] ;
+	        			}
+
+	        		}
+	        }else{
 	for (int j=0; j<=7; j++)
 	{
-
 		for (int i=0; i<=3; i++)
 		{
-				matriz[j][i] = 2;
+				matriz[j][i] = matrizj[j][i] ;
 		}
-
+	}
 	}
 	escribir(matriz,&htim4);
 	  }
@@ -545,11 +574,11 @@ void actualizar_fsm_juego(void)
 void asignar_jugada(void)
 {
 	//bloqueo = 1;
-	//int Y_ = Y-1;
+	//int Y ;
 	int X_ = X-1;
 
 	int j = 8-1;
-	if (matriz[j][X_] == 0)
+	if (matriz[j][X_] == 0 )
 	{
 		evento_actual = evento_jugada_valida;
 		if (jugador == 'A')
