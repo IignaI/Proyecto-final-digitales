@@ -62,6 +62,7 @@ volatile int dy;
 volatile int win_x1, win_x2, win_x3;
 volatile int win_y1, win_y2, win_y3;
 volatile int modobomba=1;
+volatile int modobot=0;
 
 extern int matriz[8][4];
 extern int ocupado;
@@ -85,6 +86,16 @@ int matrizb[8][4] = {
      			{0, 0, 2, 0},
      			{0, 2, 2, 2}
      		};
+int matrizmb[8][4] = {
+     			{0, 1, 1, 0},
+     			{0, 0, 1, 0},
+     			{0, 0, 1, 0},
+     			{0, 1, 1, 1},
+     			{0, 2, 0, 2},
+     			{0, 2, 0, 2},
+     			{0, 2, 2, 2},
+     			{0, 2, 0, 2}
+     		};
 
 int existe(int x,int y)  //funcion auxiliar que determina si la posicion existe...
 {
@@ -103,7 +114,7 @@ void main_menu(void)
 	static uint32_t tiempo_anterior_menu = 0;
 	  if (HAL_GetTick() - tiempo_anterior_menu >= 300) {
 	        tiempo_anterior_menu = HAL_GetTick();
-	        if (modobomba == 1 ){
+	        if (modobomba == 1 && modobot==0){
 	        	for (int j=0; j<=7; j++)
 	        		{
 	        			for (int i=0; i<=3; i++)
@@ -112,7 +123,7 @@ void main_menu(void)
 	        			}
 
 	        		}
-	        }else{
+	        }else if(modobot==0 && modobomba==0){
 	for (int j=0; j<=7; j++)
 	{
 		for (int i=0; i<=3; i++)
@@ -120,11 +131,19 @@ void main_menu(void)
 				matriz[j][i] = matrizj[j][i] ;
 		}
 	}
-	}
-	escribir(matriz,&htim4);
-	  }
+	}else{
+		for (int j=0; j<=7; j++)
+			{
+				for (int i=0; i<=3; i++)
+				{
+						matriz[j][i] = matrizmb[j][i] ;
+				}
 
-}
+	}
+
+	  }
+	        escribir(matriz,&htim4);
+}}
 
 void jugada_de_bot_no_dejar_ganar(void)
 {
@@ -134,11 +153,11 @@ void jugada_de_bot_no_dejar_ganar(void)
 		{
 
 			//ACA LAS JUGADAS GANADORAS
-						if (matriz[y][x]==1 && matriz[y][x+1]==2 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 || existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 || existe(x+2,y+1)==0))
+						if (matriz[y][x]==2 && matriz[y][x+1]==2 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 || existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 || existe(x+2,y+1)==0))
 						{
 							x_bot=x+2;
 						}
-						else if (matriz[y][x]==2 && matriz[y][x-1]==1 && matriz[y][x-2]==0 && (matriz[y-1][x-2]!=0 || existe(x-2,y-1)==0) && (matriz[y+1][x-2]==0 || existe(x-2,y+1)==0))
+						else if (matriz[y][x]==2 && matriz[y][x-1]==2 && matriz[y][x-2]==0 && (matriz[y-1][x-2]!=0 || existe(x-2,y-1)==0) && (matriz[y+1][x-2]==0 || existe(x-2,y+1)==0))
 						{
 							x_bot=x-2;
 						}
@@ -246,7 +265,7 @@ void jugada_de_bot_ganar(void)
 		for (int x=0; x<=3; x++)
 		{
 			//ACA LAS JUGADAS GANADORAS EN CASO QUE EXISTAN DOS fichas posibles ganadoras
-			if (matriz[y][x]==1 && matriz[y][x+1]==2 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 || existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 || existe(x+2,y+1)==0))
+			if (matriz[y][x]==2 && matriz[y][x+1]==2 && matriz[y][x+2]==0 && (matriz[y-1][x+2]!=0 || existe(x+2,y-1)==0) && (matriz[y+1][x+2]==0 || existe(x+2,y+1)==0))
 			{
 				x_bot=x+2;
 			}
@@ -461,12 +480,43 @@ void actualizar_fsm_juego(void)
             break; // No hace nada y sale del switch de forma segura
     case estado_inicio:
     	main_menu();
-    	if (evento_actual == evento_presionar)
+    	if (evento_actual == evento_presionar && X==4 && Y==4)
     	{
 
-
+    		modobomba=0;
+    		modobot=0;
     		evento_actual = evento_soltar;
-    		estado_siguiente = estado_prepartida;
+    		estado_siguiente = estado_inicio;
+    	}
+    	else if (evento_actual == evento_presionar && X==3 && Y==4)
+		{
+
+    		modobomba=0;
+    					modobot=1;
+    					dificultad=2;
+			evento_actual = evento_soltar;
+			estado_siguiente = estado_inicio;
+		}
+    	else if (evento_actual == evento_presionar && X==2 && Y==4)
+		{
+
+    		modobomba=1;
+    		modobot=0;
+			evento_actual = evento_soltar;
+			estado_siguiente = estado_inicio;
+		}
+    	else if (evento_actual == evento_presionar && X==1 && Y==4)
+		{
+
+
+			evento_actual = evento_soltar;
+			estado_siguiente = estado_prepartida;
+		}
+
+
+    	else
+    	{
+    		evento_actual = evento_soltar;
     	}
     	break;
     case estado_prepartida:
@@ -494,12 +544,36 @@ void actualizar_fsm_juego(void)
 		}
 		break;
 	case estado_turno_B:
+		if(modobot==0){
 		if (evento_actual == evento_presionar)
 		{
 			jugador = 'B';
 			asignar_jugada();
 			evento_actual = evento_soltar;
 			estado_siguiente = estado_comprobar_jugada;
+		}
+		}else{
+			if (dificultad == 0)
+			{
+				jugada_de_bot_aleatoria();
+			}
+			else if (dificultad == 1)
+			{
+				jugada_de_bot_ganar();
+			}
+			else if (dificultad ==2)
+			{
+				jugada_de_bot_no_dejar_ganar();
+			}
+
+			//juega el bot, despues simula el presionar una boton
+			if (evento_actual == evento_presionar)
+			{
+				jugador = 'B';
+				asignar_jugada();
+				evento_actual = evento_soltar;
+				estado_siguiente = estado_comprobar_jugada;
+			}
 		}
 		break;
 	case estado_bomba:
@@ -509,7 +583,6 @@ void actualizar_fsm_juego(void)
 			asignar_jugada();
 			bomba();
 
-			//sin este if-else ocurre que el turno del que tiro la bomba es el mismo que despues de tirarla
 
 			evento_actual = evento_soltar;
 			estado_siguiente = estado_comprobar_jugada;
@@ -662,11 +735,6 @@ void comprobar(void)
 	{
 		jugador_n = 2;
 	}
-	else
-	{
-		return; // Si es la bomba ('K') u otro estado, no comprobamos victoria tradicional
-	}
-
 	while (ganar == 0 && i <= 7)
 	{
 		// 1. Calculamos las posiciones deseadas para este vector
@@ -713,6 +781,7 @@ void comprobar(void)
 		}
 		i++;
 	}
+
 
 	// Aquí abajo puedes continuar con tu sección de la jugada bomba
 }
