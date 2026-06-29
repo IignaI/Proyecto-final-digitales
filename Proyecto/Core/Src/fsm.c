@@ -596,7 +596,9 @@ void actualizar_fsm_juego(void)
 
 		if (evento_actual == evento_gana_A)
 		{
+			bloqueo=1;
 			animacion_victoria(matriz, win_y1, win_x1, win_y2, win_x2, win_y3, win_x3, &htim4);
+			bloqueo=0;
 			fin(matriz, &htim4 );
 
 			    	if (ocupado == 1)
@@ -608,7 +610,9 @@ void actualizar_fsm_juego(void)
 		}
 		else if(evento_actual == evento_gana_B)
 		{
+			bloqueo=1;
 			animacion_victoria(matriz, win_y1, win_x1, win_y2, win_x2, win_y3, win_x3, &htim4);
+			bloqueo=0;
 			fin(matriz, &htim4 );
 
 						    	if (ocupado == 1)
@@ -621,7 +625,9 @@ void actualizar_fsm_juego(void)
 		{
 
 			if (modobomba==1){
+				bloqueo=1;
 				turno_anim(5);
+				bloqueo=0;
 				estado_siguiente = estado_bomba;
 			}
 		}
@@ -629,13 +635,17 @@ void actualizar_fsm_juego(void)
 		{
 			if (jugador_f == 'A')
 			{
+				bloqueo=1;
 				turno_anim(2);
+				bloqueo=0;
 				jugador = 'B';
 				estado_siguiente = estado_turno_B;
 			}
 			else if (jugador_f == 'B')
 			{
+				bloqueo=1;
 				turno_anim(1);
+				bloqueo=0;
 				jugador = 'A';
 				estado_siguiente = estado_turno_A;
 			}
@@ -893,25 +903,34 @@ void actualizar_fsm_juego_vs_bot(void)
 		//decision de turnos
 		if (evento_actual == evento_gana_A)
 		{
+			bloqueo=1;
 			gana(1);
+			bloqueo=0;
 			estado_siguiente = estado_inicio;
 		}
 		else if(evento_actual == evento_gana_B)
 		{
+
+			bloqueo=1;
 			gana(2);
+			bloqueo=0;
 			estado_siguiente = estado_inicio;
 		}
 		else
 		{
 			if (jugador_f == 'A')
 			{
+				bloqueo=1;
 				turno_anim(2);
+				bloqueo=0;
 				jugador = 'B';
 				estado_siguiente = estado_turno_B;
 			}
 			else if (jugador_f == 'B')
 			{
+				bloqueo=1;
 				turno_anim(1);
+				bloqueo=0;
 				jugador = 'A';
 				estado_siguiente = estado_turno_A;
 			}

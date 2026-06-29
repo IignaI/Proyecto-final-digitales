@@ -7,8 +7,8 @@
 ../Core/Src/fsm.c:391:6:bomba	51
 ../Core/Src/fsm.c:459:6:borrar	3
 ../Core/Src/fsm.c:474:6:actualizar_fsm_juego	37
-../Core/Src/fsm.c:647:6:asignar_jugada	14
-../Core/Src/fsm.c:716:6:comprobar	23
-../Core/Src/fsm.c:789:6:gana	1
-../Core/Src/fsm.c:796:6:turno_anim	10
-../Core/Src/fsm.c:841:6:actualizar_fsm_juego_vs_bot	15
+../Core/Src/fsm.c:657:6:asignar_jugada	14
+../Core/Src/fsm.c:726:6:comprobar	23
+../Core/Src/fsm.c:799:6:gana	1
+../Core/Src/fsm.c:806:6:turno_anim	10
+../Core/Src/fsm.c:851:6:actualizar_fsm_juego_vs_bot	15
