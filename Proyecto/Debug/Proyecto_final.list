@@ -29,25 +29,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  000091f0  2**0
                   CONTENTS, READONLY
- 13 .debug_info   0000bbeb  00000000  00000000  00009220  2**0
+ 13 .debug_info   0000bbee  00000000  00000000  00009220  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 000022d4  00000000  00000000  00014e0b  2**0
+ 14 .debug_abbrev 000022d4  00000000  00000000  00014e0e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00000bf0  00000000  00000000  000170e0  2**3
+ 15 .debug_aranges 00000bf0  00000000  00000000  000170e8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 00000946  00000000  00000000  00017cd0  2**0
+ 16 .debug_rnglists 00000946  00000000  00000000  00017cd8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  00003673  00000000  00000000  00018616  2**0
+ 17 .debug_macro  00003673  00000000  00000000  0001861e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0000fc6a  00000000  00000000  0001bc89  2**0
+ 18 .debug_line   0000fc6c  00000000  00000000  0001bc91  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000cb205  00000000  00000000  0002b8f3  2**0
+ 19 .debug_str    000cb205  00000000  00000000  0002b8fd  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  000f6af8  2**0
+ 20 .comment      00000043  00000000  00000000  000f6b02  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  000038d8  00000000  00000000  000f6b3c  2**2
+ 21 .debug_frame  000038d8  00000000  00000000  000f6b48  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 00000070  00000000  00000000  000fa414  2**0
+ 22 .debug_line_str 00000070  00000000  00000000  000fa420  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -7608,7 +7608,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	default:
 		break;
  80036a4:	e0ce      	b.n	8003844 <HAL_GPIO_EXTI_Callback+0x1f4>
-		    Xf = HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x1);
+		    Xf = HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x1);	//Se lee nuevamente el valor de entrada
  80036a6:	f44f 5180 	mov.w	r1, #4096	@ 0x1000
  80036aa:	4881      	ldr	r0, [pc, #516]	@ (80038b0 <HAL_GPIO_EXTI_Callback+0x260>)
  80036ac:	f001 f8f4 	bl	8004898 <HAL_GPIO_ReadPin>
@@ -7884,6 +7884,10 @@ void rutina_leer_filas(uint16_t pin_x)
  80038e0:	af00      	add	r7, sp, #0
  80038e2:	4603      	mov	r3, r0
  80038e4:	80fb      	strh	r3, [r7, #6]
+	//Este algoritmo es el barrido que se genera una vez detectada la columna (X)
+	//que interrumpió...
+	//Simplemente barre haciendo una fila en cero y las demas en alta impedancia
+	//hasta que se lea un cero en la columna y asi determinar (X,Y) que se presionó
 	Y = 0;
  80038e6:	4b52      	ldr	r3, [pc, #328]	@ (8003a30 <rutina_leer_filas+0x154>)
  80038e8:	2200      	movs	r2, #0

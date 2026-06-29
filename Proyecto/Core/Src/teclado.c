@@ -42,8 +42,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	case tcl_pin_x1:
 	{
 
-		    Xf = HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x1);
+		    Xf = HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x1);	//Se lee nuevamente el valor de entrada
 		    delay_bruto(100000);
+
+		    	//Si despues del delay_bruto sigue siendo cero (ACTIVO BAJO) entonces era intencionada
+		    	//La presion del switcht
 		        if (Xf == 0 && Xf == HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x1))
 		        {
 		            X = 1;
@@ -51,12 +54,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		            rutina_leer_filas(tcl_pin_x1);
 		            while (HAL_GPIO_ReadPin(tcl_puerto,tcl_pin_x1)==0)
 					{
-						//printf("nada\n");
+						//Mientras el boton no se suelte se queda en la interrupcion
 					}
 		            T=HAL_GetTick();
+		            //Esta variable sirve para evitar que la rutina se vuelva a ejecutar
+		            //producto de los rebotes al soltar. Esta variable sirve
+		            //para pausar la interrupcion por unos milisegundos, porque es condicion
+		            //de la interrupcion para que se ejecute que lo haga por lo menos
+		            //a HAL_GetTick() >= T+500 despues...
 		        }
 
-
+		        //Los demas casos son analogos pera para las demas columnas
 		break;
 	case tcl_pin_x2:
 
@@ -132,6 +140,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void rutina_leer_filas(uint16_t pin_x)
 {
+	//Este algoritmo es el barrido que se genera una vez detectada la columna (X)
+	//que interrumpió...
+	//Simplemente barre haciendo una fila en cero y las demas en alta impedancia
+	//hasta que se lea un cero en la columna y asi determinar (X,Y) que se presionó
 	Y = 0;
 	HAL_GPIO_WritePin(tcl_puerto,tcl_pin_y1,GPIO_PIN_RESET);
     HAL_GPIO_WritePin(tcl_puerto,tcl_pin_y2,GPIO_PIN_SET);

@@ -87,6 +87,8 @@ TIM_HandleTypeDef htim4;
 DMA_HandleTypeDef hdma_tim4_ch2;
 
 /* USER CODE BEGIN PV */
+
+//Todas las variables son globales porque se usan en varios .c
 volatile int ocupado = 0;//definido paratodos los subsistemas me  parece que deberia arreglarlo o no ponerlo aca
 volatile char jugador;
 volatile int X;
@@ -98,6 +100,10 @@ volatile int Yf;
 volatile uint32_t T;
 volatile uint32_t TT;
 volatile int bloqueo = 0;
+
+//matriz donde se guardaran enteros que representan las entidades del juego, fichas, entidades de animacion, etc...
+//enteros porque es mas simple de operar. Para imprimir lo que se hace es traducir esta matriz de enteros
+//por otra con una matriz que si pueda procesarse en driver led...
 volatile int matriz[8][4] =
 {
 		{0,0,0,0},
