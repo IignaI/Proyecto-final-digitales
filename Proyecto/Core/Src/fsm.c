@@ -66,6 +66,7 @@ volatile int modobot=0;
 
 extern int matriz[8][4];
 extern int ocupado;
+//las isguientes matrices representan las diferentes pantallas del menu
 int matrizj[8][4] = {
      			{0, 1, 1, 0},
      			{0, 0, 1, 0},
@@ -114,6 +115,7 @@ void main_menu(void)
 	static uint32_t tiempo_anterior_menu = 0;
 	  if (HAL_GetTick() - tiempo_anterior_menu >= 300) {
 	        tiempo_anterior_menu = HAL_GetTick();
+	        //en base a que modos se tenga seleccionado se enciende la matriz
 	        if (modobomba == 1 && modobot==0){
 	        	for (int j=0; j<=7; j++)
 	        		{
@@ -456,7 +458,7 @@ void bomba(void)
 	}
 }
 }
-void borrar(void)
+void borrar(void)//borra la matriz entera
 {
 	for (int j=0; j<=7; j++)
 	{
@@ -476,8 +478,7 @@ void actualizar_fsm_juego(void)
     switch (estado_siguiente)
     {
     default:
-            // "Todas las demás opciones que no me importan entran aquí"
-            break; // No hace nada y sale del switch de forma segura
+            break;
     case estado_inicio:
     	main_menu();
     	if (evento_actual == evento_presionar && X==4 && Y==4)
@@ -656,8 +657,7 @@ void actualizar_fsm_juego(void)
 
 void asignar_jugada(void)
 {
-	//bloqueo = 1;
-	//int Y ;
+
 	int X_ = X-1;
 
 	int j = 8-1;
@@ -717,9 +717,7 @@ void asignar_jugada(void)
 		evento_actual = evento_jugada_invalida_de_A;
 	}
 
-	bloqueo = 0;
 	X=0;
-	Y=0;
 
 }
 
