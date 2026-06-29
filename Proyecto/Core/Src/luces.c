@@ -14,7 +14,7 @@ extern volatile int ocupado ;
 #define PWM_BIT_0  5   // 400ns
 #define PWM_BIT_1  10  // 800ns
 
-void actualizar_matriz(TIM_HandleTypeDef *htim, uint32_t *lista_colores) { // <-- NUEVO: Volvemos a pedir uint32_t*
+void actualizar_matriz(TIM_HandleTypeDef *htim, uint32_t *lista_colores) {
 
     for (int i = 0; i < (START_BITS + TOTAL_BITS + RESET_BITS); i++) { // limpio la matriz entera
         pwm_buffer[i] = 0;
@@ -109,7 +109,7 @@ void escribir(int matriz[FILAS][COLUMNAS], TIM_HandleTypeDef *htim) {
 
 void caer_en_columna(int matriz[FILAS][COLUMNAS], int columna_elegida, uint32_t color, TIM_HandleTypeDef *htim) {
 
-    // VARIABLES ESTÁTICAS (Mantienen su memoria interna entre llamadas)
+
     static int i = 0;
     static int fila_destino = -1;
     static int animacion_activa = 0;

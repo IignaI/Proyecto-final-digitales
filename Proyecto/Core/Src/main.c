@@ -23,12 +23,8 @@
 /* USER CODE BEGIN Includes */
 #include "luces.h"
 #include "teclado.h"
-#include "adicionales.h"
 #include "buzzer.h"
-#include "logica.h"
-#include "cpu.h"
 #include "stm32f4xx_hal.h"
-#include "imp_matriz.h"
 #include "fsm.h"
 #include "stdio.h"
 /* USER CODE END Includes */
@@ -183,20 +179,8 @@ estado_siguiente = estado_inicio;
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  // Pintamos cada LED con el dato binario que vos quieras desde afuera
-// escribir(mi_matriz,&htim4);
- //actualizar_fsm_juego();
- //escribir(matriz,&htim4);
- //HAL_Delay(500);
-	   // caer_en_columna(mi_matriz, 3 , 0x00020000,&htim4);
-	  //animacion_victoria(mi_matriz, 4, 3, 5, 3, 6, 3, &htim4);
-	 //fin(mi_matriz, &htim4 );
-	//PruebaConLed();
-	  //ocupado=1;
-	// buzzer(&htim3);
 
 	  actualizar_fsm_juego();
-	  //actualizar_fsm_juego_vs_bot();
 
     /* USER CODE END WHILE */
 

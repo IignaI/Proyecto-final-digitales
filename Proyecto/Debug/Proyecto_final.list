@@ -29,25 +29,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  000091f0  2**0
                   CONTENTS, READONLY
- 13 .debug_info   0000bbfc  00000000  00000000  00009220  2**0
+ 13 .debug_info   0000bbeb  00000000  00000000  00009220  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 000022bd  00000000  00000000  00014e1c  2**0
+ 14 .debug_abbrev 000022d4  00000000  00000000  00014e0b  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00000bf8  00000000  00000000  000170e0  2**3
+ 15 .debug_aranges 00000bf0  00000000  00000000  000170e0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 0000094d  00000000  00000000  00017cd8  2**0
+ 16 .debug_rnglists 00000946  00000000  00000000  00017cd0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  0000369b  00000000  00000000  00018625  2**0
+ 17 .debug_macro  00003673  00000000  00000000  00018616  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0000fd94  00000000  00000000  0001bcc0  2**0
+ 18 .debug_line   0000fc6e  00000000  00000000  0001bc89  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000cb263  00000000  00000000  0002ba54  2**0
+ 19 .debug_str    000cb205  00000000  00000000  0002b8f7  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  000f6cb7  2**0
+ 20 .comment      00000043  00000000  00000000  000f6afc  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  000038f4  00000000  00000000  000f6cfc  2**2
+ 21 .debug_frame  000038d8  00000000  00000000  000f6b40  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 00000070  00000000  00000000  000fa5f0  2**0
+ 22 .debug_line_str 00000070  00000000  00000000  000fa418  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -5111,7 +5111,7 @@ extern volatile int ocupado ;
 #define PWM_BIT_0  5   // 400ns
 #define PWM_BIT_1  10  // 800ns
 
-void actualizar_matriz(TIM_HandleTypeDef *htim, uint32_t *lista_colores) { // <-- NUEVO: Volvemos a pedir uint32_t*
+void actualizar_matriz(TIM_HandleTypeDef *htim, uint32_t *lista_colores) {
  8002864:	b580      	push	{r7, lr}
  8002866:	b08a      	sub	sp, #40	@ 0x28
  8002868:	af00      	add	r7, sp, #0
@@ -6103,10 +6103,10 @@ estado_siguiente = estado_inicio;
  8002e7a:	f000 f8ed 	bl	8003058 <MX_TIM4_Init>
   MX_TIM3_Init();
  8002e7e:	f000 f875 	bl	8002f6c <MX_TIM3_Init>
-	 //fin(mi_matriz, &htim4 );
-	//PruebaConLed();
-	  //ocupado=1;
-	// buzzer(&htim3);
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
 
 	  actualizar_fsm_juego();
  8002e82:	f7fe ffc9 	bl	8001e18 <actualizar_fsm_juego>

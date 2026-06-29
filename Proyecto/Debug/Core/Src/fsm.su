@@ -11,4 +11,3 @@
 ../Core/Src/fsm.c:726:6:comprobar	248	static
 ../Core/Src/fsm.c:799:6:gana	16	static
 ../Core/Src/fsm.c:806:6:turno_anim	168	static
-../Core/Src/fsm.c:851:6:actualizar_fsm_juego_vs_bot	8	static

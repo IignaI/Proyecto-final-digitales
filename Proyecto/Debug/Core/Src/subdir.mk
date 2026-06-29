@@ -5,12 +5,8 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Core/Src/adicionales.c \
 ../Core/Src/buzzer.c \
-../Core/Src/cpu.c \
 ../Core/Src/fsm.c \
-../Core/Src/imp_matriz.c \
-../Core/Src/logica.c \
 ../Core/Src/luces.c \
 ../Core/Src/main.c \
 ../Core/Src/stm32f4xx_hal_msp.c \
@@ -21,12 +17,8 @@ C_SRCS += \
 ../Core/Src/teclado.c 
 
 OBJS += \
-./Core/Src/adicionales.o \
 ./Core/Src/buzzer.o \
-./Core/Src/cpu.o \
 ./Core/Src/fsm.o \
-./Core/Src/imp_matriz.o \
-./Core/Src/logica.o \
 ./Core/Src/luces.o \
 ./Core/Src/main.o \
 ./Core/Src/stm32f4xx_hal_msp.o \
@@ -37,12 +29,8 @@ OBJS += \
 ./Core/Src/teclado.o 
 
 C_DEPS += \
-./Core/Src/adicionales.d \
 ./Core/Src/buzzer.d \
-./Core/Src/cpu.d \
 ./Core/Src/fsm.d \
-./Core/Src/imp_matriz.d \
-./Core/Src/logica.d \
 ./Core/Src/luces.d \
 ./Core/Src/main.d \
 ./Core/Src/stm32f4xx_hal_msp.d \
@@ -60,7 +48,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/adicionales.cyclo ./Core/Src/adicionales.d ./Core/Src/adicionales.o ./Core/Src/adicionales.su ./Core/Src/buzzer.cyclo ./Core/Src/buzzer.d ./Core/Src/buzzer.o ./Core/Src/buzzer.su ./Core/Src/cpu.cyclo ./Core/Src/cpu.d ./Core/Src/cpu.o ./Core/Src/cpu.su ./Core/Src/fsm.cyclo ./Core/Src/fsm.d ./Core/Src/fsm.o ./Core/Src/fsm.su ./Core/Src/imp_matriz.cyclo ./Core/Src/imp_matriz.d ./Core/Src/imp_matriz.o ./Core/Src/imp_matriz.su ./Core/Src/logica.cyclo ./Core/Src/logica.d ./Core/Src/logica.o ./Core/Src/logica.su ./Core/Src/luces.cyclo ./Core/Src/luces.d ./Core/Src/luces.o ./Core/Src/luces.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/stm32f4xx_hal_msp.cyclo ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_msp.su ./Core/Src/stm32f4xx_it.cyclo ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f4xx.cyclo ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su ./Core/Src/teclado.cyclo ./Core/Src/teclado.d ./Core/Src/teclado.o ./Core/Src/teclado.su
+	-$(RM) ./Core/Src/buzzer.cyclo ./Core/Src/buzzer.d ./Core/Src/buzzer.o ./Core/Src/buzzer.su ./Core/Src/fsm.cyclo ./Core/Src/fsm.d ./Core/Src/fsm.o ./Core/Src/fsm.su ./Core/Src/luces.cyclo ./Core/Src/luces.d ./Core/Src/luces.o ./Core/Src/luces.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/stm32f4xx_hal_msp.cyclo ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_msp.su ./Core/Src/stm32f4xx_it.cyclo ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f4xx.cyclo ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su ./Core/Src/teclado.cyclo ./Core/Src/teclado.d ./Core/Src/teclado.o ./Core/Src/teclado.su
 
 .PHONY: clean-Core-2f-Src
 
